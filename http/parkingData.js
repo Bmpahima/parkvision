@@ -11,7 +11,7 @@ export async function fetchParking(id) {
         return responseData;
         
     } catch (error) {
-        console.log(error);
+        return {error: "Could'nt fetch parking spots."};
     }
 }
 
@@ -26,7 +26,26 @@ export async function fetchAllParkingLot () {
         
     }
     catch (error) {
-        console.log(error);
+        return {error: "Could'nt fetch parking spots."};    
+    }
+}
+
+export async function bookParking(id, userId, save_time='immediate') {
+    try {
+        const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/book/`, JSON.stringify({
+            id,
+            user_id: userId,
+            savetime: save_time
+        }), { headers: { 'Content-Type': 'application/json' }});
+
+        const responseData = await response.data;
+
+        console.log(responseData);
+
+        return responseData;
+    }
+    catch (error) {
+        return {error: "Could'nt book parking"}; 
     }
 }
 

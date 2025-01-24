@@ -78,7 +78,6 @@ function LoginForm() {
     
         try {    
             const response = await login(formData);
-            console.log("hi: " , response);
     
             if (response.error) {
                 const serverMessage = response.errorMessage?.error || "An unexpected error occurred.";
@@ -86,7 +85,7 @@ function LoginForm() {
                 return;
             }
     
-            userCtx.logIn(response);
+            userCtx.logIn(response.user);
     
             navigation.navigate("drawer");
         } catch (error) {

@@ -1,54 +1,88 @@
 import { createContext, useState } from "react";
 
 const initialValue = {
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-    phoneNumber: "",
-    lisenceNumber: ""
+  id: NaN,
+  fname: "",
+  lname: "",
+  email: "",
+  phoneNumber: "",
+  lisenceNumber: "",
 };
 
 export const UserContext = createContext({
-    user: initialValue,
-    isAuthenticated: false,
-    isAdmin: false,
-    logIn: () => {},
-    logOut: () => {},
+  user: initialValue,
+  isAuthenticated: false,
+  isAdmin: false,
+  isParked: false,
+  parkingId: null,
+  logIn: () => {},
+  logOut: () => {},
+  startParking: () => {},
+  stopParking: () => {},
 });
 
 function UserContextProvider({ children }) {
-    const [user, setUser] = useState(initialValue);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false)
+  const [user, setUser] = useState(initialValue);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isParked, setIsParked] = useState(false);
+  const [parkingId, setParkingId] = useState(null);
 
-
-    function logIn(userData, isadmin=false) {
-        setUser({ ...userData }); 
-        setIsAdmin(isadmin);
-        setIsAuthenticated(true); 
+  function logIn(userData, isAdminFlag = false) {
+    if (!userData || !userData.id) {
+      console.error("Invalid user data provided for login.");
+      return;
     }
+    console.log("User logged in:", userData);
+    setUser({ ...userData });
+    setIsAdmin(isAdminFlag);
+    setIsAuthenticated(true);
+  }
 
-
-    function logOut() {
-        setUser(initialValue);
-        setIsAuthenticated(false); 
+  function startParking(id) {
+    if (!isAuthenticated) {
+      console.error("Unauthorized user cannot start parking.");
+      return;
     }
+    setIsParked(true);
+    setParkingId(id);
+  }
 
-
-    const value = {
-        user,
-        isAuthenticated,
-        isAdmin,
-        logIn,
-        logOut,
+  function stopParking() {
+    if (!isAuthenticated || !isParked) {
+      console.error("No active parking to stop.");
+      return;
     }
+    setIsParked(false);
+    setParkingId(null);
+  }
 
-    return (
-        <UserContext.Provider value={value}>
-            {children}
-        </UserContext.Provider>
-    );
+  function logOut() {
+    console.log("User logged out.");
+    setUser(initialValue);
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setIsParked(false);
+    setParkingId(null);
+  }
+
+  const value = {
+    user,
+    isAuthenticated,
+    isAdmin,
+    isParked,
+    parkingId,
+    logIn,
+    logOut,
+    startParking,
+    stopParking,
+  };
+
+  return (
+    <UserContext.Provider value={value}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export default UserContextProvider;

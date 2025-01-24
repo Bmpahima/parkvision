@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { COLORS } from "../../constants/styles";
 import Button from "../../components/Button";
@@ -9,6 +9,10 @@ function BookSpotScreen({ navigation, route }) {
   const { parkingId, parkingLot } = route.params;
   const [isSelected, setIsSelected] = useState("Immediate");
 
+    useEffect(() => {
+      console.log(route.params);
+    }, [route])
+
     const handleOptionSelection = (selectedOption) => {
         setIsSelected(selectedOption);
     };
@@ -16,12 +20,15 @@ function BookSpotScreen({ navigation, route }) {
     const onBookParking = () => {
 
       let extraMinutes = 0;
+      let request_time = 'immediate';
 
       if (isSelected === '1/2 hour') {
         extraMinutes = 30;
+        request_time = 'half'
       }
       else if (isSelected === '1 hour') {
         extraMinutes = 60;
+        request_time = 'hour'
       }
 
       const time = new Date();
@@ -39,7 +46,7 @@ function BookSpotScreen({ navigation, route }) {
         "Booking Confirmation",
         `Estimated arriving time: ${formattedTime}`,
         [
-          {text: 'Confirm', onPress: () => navigation.navigate('home', {...route.params})},
+          {text: 'Confirm', onPress: () => navigation.navigate('home', {...route.params, request_time})},
           {text: 'Cancel', onPress: () => {}}
         ]
         );

@@ -21,6 +21,26 @@ export async function login({ email, password }) {
     }
 }
 
+export async function logout(id) {
+    try {
+        const response = await axios.post(
+            `${SERVER_NGROK_URL}/auth/logout/`,
+            { id }, 
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        const resData = response.data;
+        return resData; 
+    } catch (error) {
+        console.log(error);
+        return {
+            error: "Unable to logout",
+            errorMessage: error.response ? error.response.data : error.message
+        };
+    }
+}
+
+
 export async function signUp(formData) {
     try {
         const requestData = {

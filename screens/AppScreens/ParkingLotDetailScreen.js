@@ -9,7 +9,6 @@ function ParkingLotDetailScreen({ navigation, route }) {
   const parkingLotDetail = route.params;
   const [parkingSpots, setParkingSpots] = useState([]);
 
-  // Fetch parking spots data
   useEffect(() => {
     async function fetchData() {
       try {
@@ -21,7 +20,7 @@ function ParkingLotDetailScreen({ navigation, route }) {
         }
 
         console.log("The response: ", response);
-        setParkingSpots(response.parkings || []); // Default to an empty array if no parkings
+        setParkingSpots(response.parkings || []); 
       } catch (error) {
         console.error("Error fetching parking spots:", error);
         setParkingSpots([]);

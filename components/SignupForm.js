@@ -104,7 +104,7 @@ function SignupForm() {
                 return;
             }
     
-            userCtx.logIn(response);
+            userCtx.logIn(response.user);
             navigation.navigate("drawer");
         } catch (error) {
             const serverError = error.response?.data?.error || "An unexpected error occurred.";
