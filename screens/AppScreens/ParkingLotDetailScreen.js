@@ -1,34 +1,42 @@
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useLayoutEffect, useCallback, useContext } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 import ParkingSpot from "../../components/ParkingSpot";
 import { COLORS } from "../../constants/styles";
 import { fetchParking } from "../../http/parkingData";
+import { UserContext } from "../../store/UserContext";
 
+
+// המסך של בחירת החנייה לשמירה
 function ParkingLotDetailScreen({ navigation, route }) {
   const parkingLotDetail = route.params;
   const [parkingSpots, setParkingSpots] = useState([]);
+  const userCtx = useContext(UserContext);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetchParking(parkingLotDetail.id);
-        if (!response || response.error) {
-          console.log("No Parking Lots Provided");
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        try {
+          const response = await fetchParking(parkingLotDetail.id); 
+          if (!response || response.error) {
+            console.log("No Parking Lots Provided");
+            setParkingSpots([]);
+            return;
+          }
+  
+          console.log("The response: ", response);
+          setParkingSpots(response.parkings || []); 
+        } catch (error) {
+          console.error("Error fetching parking spots:", error);
           setParkingSpots([]);
-          return;
         }
-
-        console.log("The response: ", response);
-        setParkingSpots(response.parkings || []); 
-      } catch (error) {
-        console.error("Error fetching parking spots:", error);
-        setParkingSpots([]);
       }
-    }
-
-    fetchData();
-  }, [parkingLotDetail]);
+  
+      fetchData();
+    }, [parkingLotDetail.id]) 
+  );
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,8 +44,33 @@ function ParkingLotDetailScreen({ navigation, route }) {
     });
   }, [navigation, parkingLotDetail]);
 
-  const onParkingPress = (id, occupied, parkingLot) => {
-    if (!occupied) {
+  const onParkingPress = (id, occupied, saved) => {
+    if (userCtx.isParked) {
+      Alert.alert(
+        "ParkVision",
+        `Your'e already parking in parking no. ${userCtx.parkingId}`,
+        [{ text: "Cancel", onPress: () => {} }]
+      );
+      return;
+    }
+
+    if (occupied) {
+      Alert.alert(
+        "ParkVision",
+        `This spot is already occupied. Try another one.`,
+        [{ text: "Cancel", onPress: () => {} }]
+      );
+    } 
+    else if (saved) {
+      Alert.alert(
+        "ParkVision",
+        `This spot is already occupied. Try another one.`,
+        [
+          { text: "Cancel", onPress: () => {} },
+        ]
+      );
+    }
+    else {
       Alert.alert(
         "ParkVision",
         `Do you want to book parking ${id}?`,
@@ -47,17 +80,11 @@ function ParkingLotDetailScreen({ navigation, route }) {
             onPress: () =>
               navigation.navigate("bookingParkingSpot", {
                 parkingId: id,
-                parkingLot,
+                parkingLot: parkingLotDetail,
               }),
           },
           { text: "Cancel", onPress: () => {} },
         ]
-      );
-    } else {
-      Alert.alert(
-        "ParkVision",
-        `This spot is already occupied. Try another one.`,
-        [{ text: "Cancel", onPress: () => {} }]
       );
     }
   };
@@ -73,9 +100,14 @@ function ParkingLotDetailScreen({ navigation, route }) {
           <Text style={styles.legendText}>available</Text>
         </View>
         <View style={styles.legendContainer}>
-          <View style={[styles.legend, { backgroundColor: COLORS.gray200 }]}></View>
+          <View style={[styles.legend, { backgroundColor: COLORS.gray300 }]}></View>
+          <Text style={styles.legendText}>saved</Text>
+        </View>
+        <View style={styles.legendContainer}>
+          <View style={[styles.legend, { backgroundColor: COLORS.gray700 }]}></View>
           <Text style={styles.legendText}>occupied</Text>
         </View>
+
       </View>
 
       <FlatList
@@ -85,9 +117,9 @@ function ParkingLotDetailScreen({ navigation, route }) {
         renderItem={({ item }) => (
           <ParkingSpot
             occupied={item.occupied}
+            saved={item.saved}
             id={item.id}
-            parkingLot={parkingLotDetail}
-            onPress={onParkingPress}
+            onPress={() => {onParkingPress(item.id, item.saved, item.occupied, )}}
           />
         )}
         contentContainerStyle={styles.parkingLot}

@@ -41,7 +41,7 @@ function UserContextProvider({ children }) {
 
   function startParking(id) {
     if (!isAuthenticated) {
-      console.error("Unauthorized user cannot start parking.");
+      console.log("Unauthorized user cannot start parking.");
       return;
     }
     setIsParked(true);
@@ -50,7 +50,7 @@ function UserContextProvider({ children }) {
 
   function stopParking() {
     if (!isAuthenticated || !isParked) {
-      console.error("No active parking to stop.");
+      console.log("No active parking to stop.");
       return;
     }
     setIsParked(false);

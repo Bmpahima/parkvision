@@ -23,6 +23,24 @@ export const COLORS = {
     gray50: "#ffffff",       // White
 
   };
+
+  const PARKING_COLORS = {
+    AVAILABLE: {
+      background: "#4CAF50", // ירוק
+      border: "#388E3C", // ירוק כהה
+    },
+    RESERVED: {
+      background: "#FFC107", // צהוב
+      border: "#FFA000", // צהוב כהה
+    },
+    OCCUPIED: {
+      background: "#F44336", // אדום
+      border: "#D32F2F", // אדום כהה
+    },
+  };  
+  
+  export default PARKING_COLORS;
+  
   
 
   

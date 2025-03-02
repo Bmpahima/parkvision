@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Alert, TextInput, ActivityIndicator, FlatList, Text, TouchableOpacity, Keyboard } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { useFocusEffect } from "@react-navigation/native";
 
 import { COLORS } from "../../constants/styles";
-import { DUMMY_DATA } from "../../constants/data";
 import { fetchAllParkingLot } from "../../http/parkingData";
 import Feather from "@expo/vector-icons/Feather";
 
-
+//  המסך של המפה - המסך הראשי
 function ParkingLotScreen({ navigation }) {
   const [userLocation, setUserLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,67 +26,67 @@ function ParkingLotScreen({ navigation }) {
     return true;
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetchAllParkingLot();
-        if (!response || response.error) {
-          console.log("No Parking Lots Provided");
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        try {
+          const response = await fetchAllParkingLot();
+          if (!response || response.error) {
+            console.log("No Parking Lots Provided");
+            setParkingLotLocations([]);
+            return;
+          }
+          setParkingLotLocations(response);
+        } catch (error) {
+          console.error("Error fetching parking lots:", error);
           setParkingLotLocations([]);
+        }
+      }
+      fetchData();
+    }, []) 
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true;
+
+      async function getLocationHandler() {
+        setIsLoading(true);
+
+        const hasPermission = await verifyPermissions();
+        if (!hasPermission) {
+          setIsLoading(false);
           return;
         }
-  
-        console.log("The response: ", response);
-        setParkingLotLocations(response);
-      } catch (error) {
-        console.error("Error fetching parking lots:", error);
-        setParkingLotLocations([]);
-      }
-    }
-  
-    fetchData();
-  }, []); 
-  
 
-  useEffect(() => {
-    let isMounted = true;
+        try {
+          let location = await Location.getLastKnownPositionAsync();
+          if (!location) {
+            location = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Balanced,
+            });
+          }
 
-    async function getLocationHandler() {
-      setIsLoading(true);
-
-      const hasPermission = await verifyPermissions();
-      if (!hasPermission) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        let location = await Location.getLastKnownPositionAsync();
-        if (!location) {
-          location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
+          if (isMounted) {
+            setUserLocation({
+              lat: location.coords.latitude,
+              long: location.coords.longitude,
+            });
+          }
+        } catch (error) {
+          console.error("Error getting location:", error);
+        } finally {
+          if (isMounted) setIsLoading(false);
         }
-
-        if (isMounted) {
-          setUserLocation({
-            lat: location.coords.latitude,
-            long: location.coords.longitude,
-          });
-        }
-      } catch (error) {
-        console.error("Error getting location:", error);
-      } finally {
-        if (isMounted) setIsLoading(false);
       }
-    }
 
-    getLocationHandler();
+      getLocationHandler();
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+      return () => {
+        isMounted = false;
+      };
+    }, []) 
+  );
 
   const onPressMarkerHandler = (parkingLot) => {
     navigation.navigate("parkingLotDetail", parkingLot);

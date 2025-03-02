@@ -21,6 +21,7 @@ import { COLORS } from './constants/styles';
 import SettingsScreen from './screens/AppScreens/SettingsScreen';
 import ParkingManage from './screens/AdminScreens/ParkingManage';
 import ParkingLotManage from './screens/AdminScreens/ParkingLotManage';
+import ParkingUserManager from './screens/AdminScreens/ParkingUserManager'
 
 
 const Stack = createNativeStackNavigator();
@@ -109,13 +110,19 @@ const AdminStack = () => {
           headerShown: false
         }}
         />
-        
+      <Stack.Screen 
+        name='ParkingUserManager'
+        component={ParkingUserManager} 
+        options={{
+          headerShown: false
+        }}   
+      />
     </Stack.Navigator>
   );
 }
 
 const HomeAppScreen = () => {
-  const navigation = useNavigation();
+  const userCtx = useContext(UserContext);
 
   return (
     <Drawer.Navigator>
@@ -149,16 +156,18 @@ const HomeAppScreen = () => {
           drawerIcon: ({size, color}) => <Feather name="settings" size={size} color={color} />
         }}
       /> */}
-      <Drawer.Screen 
-        name='Admin'
-        component={AdminStack}
-        options={{
-          drawerIcon: ({size, color}) => <AntDesign name="user" size={size} color={color} />,
-          headerStyle: {backgroundColor: COLORS.primary800},
-          headerTitleStyle: {color: COLORS.gray50},
-          headerTintColor: COLORS.gray50
-        }}
-      />
+      { userCtx.isAdmin && 
+        <Drawer.Screen 
+          name='Admin'
+          component={AdminStack}
+          options={{
+            drawerIcon: ({size, color}) => <AntDesign name="user" size={size} color={color} />,
+            headerStyle: {backgroundColor: COLORS.primary800},
+            headerTitleStyle: {color: COLORS.gray50},
+            headerTintColor: COLORS.gray50
+          }}
+        />
+      }
       <Drawer.Screen 
         name='logout' 
         component={LogoutScreen} 

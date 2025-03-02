@@ -1,53 +1,73 @@
-import React from "react"
-import { Text, View, FlatList, StyleSheet, SafeAreaView, StatusBar, Alert } from "react-native"
-import { useEffect, useState, useLayoutEffect } from "react";
-import ParkingSpot from "../../components/ParkingSpot"
+import React, { useEffect, useState, useLayoutEffect, useCallback } from "react";
+import { Text, View, FlatList, StyleSheet, SafeAreaView, StatusBar, Alert } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+
+import ParkingSpot from "../../components/ParkingSpot";
 import { COLORS } from "../../constants/styles";
 import Button from "../../components/Button";
+import { fetchParkingLotUsers } from "../../http/parkingData";
 
 
+// המסך בו אפשר לראות את כל החניות בחניון מסויים במסך האדמין
 function ParkingLotManage({ route, navigation }) {
     const { parkingLotDetail, parkings } = route.params;
-    const freeSpots = parkingLotDetail.freeSpots
+    const freeSpots = parkingLotDetail.freeSpots;
     const occupiedSpots = parkingLotDetail.parking_spots - freeSpots;
-
     const [parkingSpots, setParkingSpots] = useState(parkings);
-    
-        // useEffect(() => {
-        //   fetchParking();
-        // }, []); 
-    
-        useLayoutEffect(() => {
-            navigation.setOptions({
-                title: parkingLotDetail.name
-            });
-        }, [navigation, parkingLotDetail])
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-
-        const onParkingPress = (id, occupied, parkingLot, license_number=null) => {
-                if ( !occupied ) {
-                    Alert.alert('ParkVision', `This Parking is free`,[
-                        {text: 'Cancel', onPress: () => {}}
-                    ]); 
-                }
-                else {
-                    Alert.alert('ParkVision', `This spot is occupied by: \n User Details: \n ${license_number && license_number} `,[
-                        {text: 'Cancel', onPress: () => {}}
-                    ]);
+    useFocusEffect(
+        useCallback(() => {
+            async function getParkingData() {
+                console.log(parkingSpots)
+                try {
+                    setLoading(true);
+                    const response = await fetchParkingLotUsers(parkingLotDetail.id);
+                    if (response.error) {
+                        setError(response.error);
+                    } else {
+                        setParkingSpots(response.parkings);
+                        console.log(response.parkings);
+                    }
+                } catch (err) {
+                    setError("Failed to fetch parking data.");
+                } finally {
+                    setLoading(false);
                 }
             }
+            getParkingData();
+        }, [parkingLotDetail.id])
+    );
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: parkingLotDetail.name
+        });
+    }, [navigation, parkingLotDetail]);
+
+    const onParkingPress = (id, occupied, saved, driver = null) => {
+        if (occupied && driver) {
+            navigation.navigate("ParkingUserManager", { user: driver }); 
+        } else if (saved && driver) {
+            navigation.navigate("ParkingUserManager", { user: driver }); 
+        } else {
+            Alert.alert("ParkVision", `This Parking is free`, [{ text: "Cancel", onPress: () => {} }]);
+        }
+    };
+    
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Parking Lot 01</Text>
+                <Text style={styles.title}>{parkingLotDetail.name}</Text>
                 <View style={styles.statusBar}>
-                <Text style={styles.statusText}>
-                    Free: <Text style={styles.statusNumber}>{freeSpots}</Text>
-                </Text>
-                <Text style={styles.statusText}>
-                    Occupied: <Text style={styles.statusNumber}>{occupiedSpots}</Text>
-                </Text>
+                    <Text style={styles.statusText}>
+                        Free: <Text style={styles.statusNumber}>{freeSpots}</Text>
+                    </Text>
+                    <Text style={styles.statusText}>
+                        Occupied: <Text style={styles.statusNumber}>{occupiedSpots}</Text>
+                    </Text>
                 </View>
             </View>
             <FlatList
@@ -55,12 +75,11 @@ function ParkingLotManage({ route, navigation }) {
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={2}
                 renderItem={({ item }) => (
-                    <ParkingSpot 
-                      occupied={item.occupied} 
-                      id={item.id} 
-                      parkingLot={parkingLotDetail} 
-                      license_number={item.license_number}
-                      onPress={onParkingPress}
+                    <ParkingSpot
+                        occupied={item.occupied}
+                        saved={item.saved}
+                        id={item.id}
+                        onPress={() => onParkingPress(item.id, item.occupied, item.saved, item.user)}
                     />
                 )}
                 contentContainerStyle={styles.parkingLot}
@@ -72,7 +91,8 @@ function ParkingLotManage({ route, navigation }) {
     );
 }
 
-export default ParkingLotManage
+export default ParkingLotManage;
+
 
 const styles = StyleSheet.create({
     container: {

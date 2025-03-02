@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Alert } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 
 import Button from "../../components/Button";
 import { COLORS } from "../../constants/styles";
 import CarTimerCircle from "../../components/CarTimerCircle";
-import { bookParking } from "../../http/parkingData";
+import { bookParking, unBookParking } from "../../http/parkingData";
 import { UserContext } from "../../store/UserContext";
 
 const defaultTimerDisplay = {
@@ -17,11 +17,9 @@ const defaultTimerDisplay = {
 function HomeScreen({ navigation, route }) {
   const isFocused = useIsFocused();
   const userCtx = useContext(UserContext);
-
   const [timeValue, setTimeValue] = useState(defaultTimerDisplay);
   const [timerRunning, setTimerRunning] = useState(false);
-  const [reservedUntil, setReservedUntil] = useState(null); 
-  const [isParkingConfirmed, setIsParkingConfirmed] = useState(false); 
+  const [reservedUntil, setReservedUntil] = useState(null);
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -29,47 +27,112 @@ function HomeScreen({ navigation, route }) {
     if (!isFocused && !timerRunning) {
       setTimeValue(defaultTimerDisplay);
     }
-    console.log("Route params:", route.params);
   }, [isFocused]);
 
-  useEffect(() => {
-    async function startBookParking() {
+  useFocusEffect(
+    useCallback(() => {
+      const isMissingParams =
+        !route.params || !route.params.parkingId || !route.params.request_time;
+
+      if (!userCtx.isParked  && isMissingParams) {
+        Alert.alert(
+          "Access Denied",
+          "You must have an active parking session to use this screen.",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("ParkingLotHome"),
+            },
+          ]
+        );
+      } else if (
+        route.params &&
+        userCtx.isParked &&
+        userCtx.parkingId !== route.params.parkingId
+      ) {
+        Alert.alert(
+          "Access Denied",
+          "You must have an active parking session to use this screen.",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("ParkingLotHome"),
+            },
+          ]
+        );
+      }
+    }, [userCtx.isParked, route.params])
+  );
+
+  
+
+  // Start Timer and Book Parking
+  const startTimer = async () => {
+    if (!timerRunning && !userCtx.parkingId) {
       try {
-        if (route && route.params) {
-          const userId = userCtx.user.id;
-          const parkingId = route.params.parkingId;
-          const savetime = route.params.request_time;
+        const userId = userCtx.user.id;
+        const parkingId = route.params?.parkingId;
+        const savetime = route.params?.request_time;
 
-          if (userCtx.isParked) {
-            Alert.alert("Error", "You already have an active parking session.");
-            return;
-          }
+        if (!parkingId || !savetime) {
+          Alert.alert("Error", "Missing parking details.");
+          return;
+        }
 
-          const response = await bookParking(parkingId, userId, savetime);
+        const response = await bookParking(parkingId, userId, savetime);
 
-          if (response && response.success) {
-            console.log("Booking successful:", response);
-            userCtx.startParking(parkingId);
+        if (response && response.success) {
+          console.log("Booking successful:", response);
+          userCtx.startParking(parkingId);
 
-            const now = new Date();
-            if (savetime === "half") now.setMinutes(now.getMinutes() + 30);
-            else if (savetime === "hour") now.setMinutes(now.getMinutes() + 60);
+          const now = new Date();
+          if (savetime === "half") now.setMinutes(now.getMinutes() + 30);
+          else if (savetime === "hour") now.setMinutes(now.getMinutes() + 60);
 
-            setReservedUntil(now);
-          } else {
-            Alert.alert("Error", "Failed to book parking spot. Please try again.");
-          }
+          setReservedUntil(now);
+
+          // Start the timer
+          startTimeRef.current = Date.now();
+          timerRef.current = setInterval(clockDisplay, 1000);
+          setTimerRunning(true);
+        } else {
+          Alert.alert("Error", "Failed to book parking spot. Please try again.");
         }
       } catch (error) {
         console.error("Error booking parking:", error);
         Alert.alert("Error", "An unexpected error occurred.");
       }
     }
+  };
 
-    startBookParking(); 
-  }, [route, userCtx]);
+  // Stop Timer and Unbook Parking
+  const stopTimer = async () => {
+    if (timerRunning) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setTimerRunning(false);
 
-  function clockDisplay() {
+      try {
+        const userId = userCtx.user.id;
+        const parkingId = userCtx.parkingId;
+
+        const response = await unBookParking(parkingId, userId);
+
+        if (!response || response.error) {
+          throw new Error("Failed to stop parking session.");
+        }
+
+        userCtx.stopParking();
+        Alert.alert("Success", "Parking session ended successfully.");
+      } catch (error) {
+        console.log("Error stopping parking:", error);
+        Alert.alert("Error", "Could not stop parking session.");
+      }
+    }
+  };
+
+  // Update Timer Display
+  const clockDisplay = () => {
     const now = Date.now();
     const elapsedTime = now - startTimeRef.current;
     const totalSeconds = Math.floor(elapsedTime / 1000);
@@ -83,27 +146,10 @@ function HomeScreen({ navigation, route }) {
       minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
       seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
     });
-  }
-
-  const toggleTimer = () => {
-    if (timerRunning) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-      setTimerRunning(false);
-    } else {
-      startTimeRef.current = Date.now();
-      timerRef.current = setInterval(clockDisplay, 1000);
-      setTimerRunning(true);
-    }
-  };
-
-  const confirmParking = () => {
-    setIsParkingConfirmed(true);
-    Alert.alert("Parking Confirmed", "You have started your parking session.");
   };
 
   useEffect(() => {
-    return () => clearInterval(timerRef.current); 
+    return () => clearInterval(timerRef.current);
   }, []);
 
   return (
@@ -116,40 +162,46 @@ function HomeScreen({ navigation, route }) {
             {timeValue.hours}:{timeValue.minutes}:{timeValue.seconds}
           </Text>
           <Text style={styles.spotNumber}>
-            Spot {route.params ? route.params.parkingId : "N/A"}
+            Spot {userCtx?.parkingId || "N/A"}
           </Text>
           {reservedUntil && (
             <Text style={styles.reservedText}>
               Reserved until:{" "}
-              {reservedUntil.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              {reservedUntil.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </Text>
           )}
         </View>
-
-        {!isParkingConfirmed ? (
+        <View style={styles.buttonsContainer}>
+          <View style={styles.startStop}>
+            <Button
+              onPress={startTimer}
+              buttonStyle={[
+                styles.button,
+                { backgroundColor: COLORS.primary400, paddingHorizontal: 40 },
+              ]}
+            >
+              Start
+            </Button>
+            <Button
+              onPress={stopTimer}
+              buttonStyle={[
+                styles.button,
+                { backgroundColor: COLORS.primary400, paddingHorizontal: 40 },
+              ]}
+            >
+              Stop
+            </Button>
+          </View>
           <Button
-            onPress={confirmParking}
-            buttonStyle={[styles.button, { backgroundColor: COLORS.primary500 }]}
-          >
-            Confirm Parking
-          </Button>
-        ) : (
-          <Button
-            onPress={toggleTimer}
+            onPress={() => console.log("Change button pressed")}
             buttonStyle={[styles.button, { backgroundColor: COLORS.primary300 }]}
           >
-            {timerRunning ? "Stop Timer" : "Start Timer"}
+            Change
           </Button>
-        )}
-
-        <Button
-          onPress={() => {
-            console.log("Change button pressed");
-          }}
-          buttonStyle={[styles.button, { backgroundColor: COLORS.primary200 }]}
-        >
-          Change
-        </Button>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -199,5 +251,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 25,
     marginVertical: 10,
+  },
+  startStop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonsContainer: {
+    minWidth: 300,
   },
 });

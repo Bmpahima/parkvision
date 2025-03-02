@@ -4,7 +4,7 @@ import { logout } from "../../http/auth";
 import { UserContext } from "../../store/UserContext";
 import { Alert } from "react-native";
 
-function LogoutScreen() {
+function LogoutScreen({ navigation }) {
     const userCtx = useContext(UserContext);
 
     useEffect(() => {
@@ -19,15 +19,15 @@ function LogoutScreen() {
             catch (error) {
                 console.log(error);
             }
+            userCtx.logOut();
         }
 
         if (userCtx.isParked) {
             Alert.alert("Can't log out because you are save / parking.");
-            return;
+            navigation.navigate('home')
+        } else {
+            userLogout();
         }
-
-        userLogout();
-        userCtx.logOut();
     }, [userCtx]);
 
     return null; 

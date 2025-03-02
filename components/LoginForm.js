@@ -84,8 +84,8 @@ function LoginForm() {
                 Alert.alert("Login Error", serverMessage);
                 return;
             }
-    
-            userCtx.logIn(response.user);
+            
+            userCtx.logIn(response.user, response.isAdmin);
     
             navigation.navigate("drawer");
         } catch (error) {

@@ -3,16 +3,26 @@ import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 import { COLORS } from "../constants/styles";
 
-function ParkingSpot({ id, occupied, parkingLot, onPress, license_number }) {
+
+function ParkingSpot({ id, occupied, saved, onPress }) {
     const onParkingSelection = () => {
-        onPress(id, occupied, parkingLot, license_number);
+        onPress();
     };
+
+    let currentStyle = styles.availableSpot;
+
+    if (occupied) {
+        currentStyle = styles.occupiedSpot
+    }
+    else if (saved) {
+        currentStyle = styles.savedSpot
+    }
 
     return (
         <TouchableOpacity
             style={[
                 styles.spot,
-                occupied ? styles.occupiedSpot : styles.availableSpot,
+                currentStyle
             ]}
             onPress={onParkingSelection}
         >
@@ -41,12 +51,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
       },
       availableSpot: {
-        backgroundColor: COLORS.primary400, 
-        borderColor: COLORS.primary600,
+        backgroundColor: COLORS.primary500, 
+        borderColor: COLORS.primary700,
         borderWidth: 1
       },
       occupiedSpot: {
-        backgroundColor: COLORS.gray200,
+        backgroundColor: COLORS.gray700,
+        borderColor: COLORS.gray900,
+        borderWidth: 2
+      },
+      savedSpot: {
+        backgroundColor: COLORS.gray300,
         borderColor: COLORS.gray400,
         borderWidth: 2
       },
