@@ -24,6 +24,16 @@ export const COLORS = {
 
   };
 
+
+  export const UI_COLORS = {
+    red400: "#F44336", 
+    red600: "#D32F2F",
+    yellow400: "#FFC107",
+    yellow600: "#FFA000",
+    green400: "#4CAF50", 
+    green600: "#388E3C",
+  }
+
   const PARKING_COLORS = {
     AVAILABLE: {
       background: "#4CAF50", // ירוק

@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 import { COLORS } from "../constants/styles";
 
-
+// רכיב של מגרש החנייה שניתן לבחור בו חניות ולראות אילו פנויות ואילו תפוסות
 function ParkingSpot({ id, occupied, saved, onPress }) {
     const onParkingSelection = () => {
         onPress();

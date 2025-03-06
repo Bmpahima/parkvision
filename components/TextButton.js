@@ -1,5 +1,6 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 
+// רכיב של כפתור טקסט פשוט
 function TextButton({ children, onPress }) {
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [pressed && styles.isPressed]}>

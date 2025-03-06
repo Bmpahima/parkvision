@@ -1,6 +1,9 @@
 import { Text, TextInput, View, StyleSheet } from "react-native";
 import { COLORS } from "../constants/styles";
 
+
+// רכיב לקלט של הטפסים של הכניסה והרשמה של משתמשים עם אופציות לשינוי המקלדת והסתרת התויים 
+
 function Input({ placeholder, keyType = "default", secureInput = false, onChangeHandler, name, errorMessage }) {
     return (
         <View style={styles.container}>

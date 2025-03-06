@@ -10,6 +10,8 @@ import { COLORS } from "../constants/styles";
 import { loginValidation } from "../util/validators";
 import { login } from "../http/auth";
 
+// רכיב המייצג את טופס הכניסה של המשתמש 
+
 function LoginForm() {
     const navigation = useNavigation();
     const [errorMessages, setErrorMessages] = useState({});
@@ -21,13 +23,13 @@ function LoginForm() {
         password: "",
     });
 
-    const onChangeHandler = (text, field) => {
+    const onChangeHandler = (text, field) => { // פונקציה שמתבצעת בשינוי הטקסט בטופס
         setFormData((currentValue) => ({
             ...currentValue,
             [field]: text,
         }));
 
-        if (hasSubmitted) {
+        if (hasSubmitted) { // אם המשתמש כבר ניס להגיש את הטופס
             setErrorMessages((currentErrors) => {
                 const updatedErrors = { ...currentErrors };
 
@@ -86,7 +88,6 @@ function LoginForm() {
             }
             
             userCtx.logIn(response.user, response.isAdmin);
-    
             navigation.navigate("drawer");
         } catch (error) {
             const serverError = error.response?.data?.error || "An unexpected error occurred.";
@@ -95,8 +96,6 @@ function LoginForm() {
     };
     
     
-    
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>

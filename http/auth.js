@@ -1,6 +1,7 @@
 import { SERVER_NGROK_URL } from '@env';
 import axios from 'axios';
 
+// פונקציה שמשמשת לכניסה של המשתמש למערכת
 export async function login({ email, password }) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/auth/login/`, JSON.stringify({
@@ -21,6 +22,7 @@ export async function login({ email, password }) {
     }
 }
 
+// פונקציה שמשמשת ליציאה של המשתמש מהמערכת
 export async function logout(id) {
     try {
         const response = await axios.post(
@@ -41,6 +43,7 @@ export async function logout(id) {
 }
 
 
+// פונקציה שמשמשת לשמירת פרטי ההרשמה והרשמה של משתמש למערכת
 export async function signUp(formData) {
     try {
         const requestData = {

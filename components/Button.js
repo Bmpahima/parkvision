@@ -2,6 +2,7 @@ import { Text, Pressable, StyleSheet } from "react-native";
 
 import { COLORS } from "../constants/styles";
 
+// רכיב של כפתור
 function Button({ children, onPress, buttonStyle, labelStyle }) {
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [styles.buttonContainer, pressed && styles.isPressed, buttonStyle]}>

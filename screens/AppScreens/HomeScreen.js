@@ -14,6 +14,8 @@ const defaultTimerDisplay = {
   seconds: "00",
 };
 
+
+// המסך בו מופיע הטיימר של החנייה.
 function HomeScreen({ navigation, route }) {
   const isFocused = useIsFocused();
   const userCtx = useContext(UserContext);
@@ -26,8 +28,10 @@ function HomeScreen({ navigation, route }) {
   useEffect(() => {
     if (!isFocused && !timerRunning) {
       setTimeValue(defaultTimerDisplay);
+      userCtx.stopParking()
     }
   }, [isFocused]);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -65,8 +69,6 @@ function HomeScreen({ navigation, route }) {
   );
 
   
-
-  // Start Timer and Book Parking
   const startTimer = async () => {
     if (!timerRunning && !userCtx.parkingId) {
       try {

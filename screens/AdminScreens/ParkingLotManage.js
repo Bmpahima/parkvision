@@ -20,7 +20,6 @@ function ParkingLotManage({ route, navigation }) {
     useFocusEffect(
         useCallback(() => {
             async function getParkingData() {
-                console.log(parkingSpots)
                 try {
                     setLoading(true);
                     const response = await fetchParkingLotUsers(parkingLotDetail.id);
@@ -28,7 +27,6 @@ function ParkingLotManage({ route, navigation }) {
                         setError(response.error);
                     } else {
                         setParkingSpots(response.parkings);
-                        console.log(response.parkings);
                     }
                 } catch (err) {
                     setError("Failed to fetch parking data.");

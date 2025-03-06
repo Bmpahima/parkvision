@@ -4,6 +4,8 @@ import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Eas
 
 import { COLORS } from '../constants/styles';
 
+// רכיב שמייצג את הטיימר שיש בתוכו את התמונה של המכונית
+
 function CarTimerCircle ({ isRunning }) {
     const shadowSharedValue = useSharedValue(0);
     const animatedStyle = useAnimatedStyle(() => {

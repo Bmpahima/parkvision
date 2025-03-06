@@ -1,6 +1,7 @@
 import { SERVER_NGROK_URL } from '@env';
 import axios from 'axios';
 
+// פונקציה שמחזירה את המידע הדרוש על חניון בהינתן המספר המזהה שלו
 export async function fetchParking(id) { 
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/${id}`);
@@ -12,6 +13,7 @@ export async function fetchParking(id) {
     }
 }
 
+// פונקציה שמחזירה את המידע הדרוש על כל החניונים
 export async function fetchAllParkingLot () {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/all/`);
@@ -24,6 +26,7 @@ export async function fetchAllParkingLot () {
     }
 }
 
+// פונקציה המשמשת לשמירת חנייה מסוימת בהינתן מספר מזהה, מספר משתמש וזמן לשמירה
 export async function bookParking(id, userId, save_time='immediate') {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/book/`, JSON.stringify({
@@ -40,6 +43,7 @@ export async function bookParking(id, userId, save_time='immediate') {
     }
 }
 
+// פונקציה שרק בודקת בזמן אמת אם חנייה תפוסה או לא
 export async function isOccupied(parkingId) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/occupancy/`, JSON.stringify({
@@ -58,6 +62,7 @@ export async function isOccupied(parkingId) {
     }
 }
 
+// פונקציה שמפסיקה את השמירה של החנייה
 export async function unBookParking(id, userId) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/unbook/`, JSON.stringify({
@@ -73,6 +78,7 @@ export async function unBookParking(id, userId) {
     }
 }
 
+// פונקציה שמחזירה מידע על החניונים של האדמין בהינתן מספר מזהה
 export async function fetchOwnerParkingLots(ownerId) {
     try {
         
@@ -86,6 +92,7 @@ export async function fetchOwnerParkingLots(ownerId) {
     }
 }
 
+// פונקציה שמחזירה מידע מהשרת עבור האדמין על משתמשים החונים בחניון שלו
 export async function fetchParkingLotUsers(parkingLotId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/parking_lot_users/${parkingLotId}/`);

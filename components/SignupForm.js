@@ -10,6 +10,7 @@ import { COLORS } from "../constants/styles";
 import {signUp} from '../http/auth';
 import { signUpValidation, nameValidator, emailValidator, passwordValidator, lisenceValidator, phoneValidator } from "../util/validators";
 
+// רכיב המייצג טופס הרשמה של משתמשים
 function SignupForm() {
     const navigation = useNavigation();
     const [errorMessages, setErrorMessages] = useState({});

@@ -149,13 +149,13 @@ const HomeAppScreen = () => {
           drawerIcon: ({size, color}) => <Ionicons name="timer-outline" size={size} color={color} />
         })}
       />
-      {/* <Drawer.Screen 
+      <Drawer.Screen 
         name='Settings'
         component={SettingsScreen}
         options={{
           drawerIcon: ({size, color}) => <Feather name="settings" size={size} color={color} />
         }}
-      /> */}
+      />
       { userCtx.isAdmin && 
         <Drawer.Screen 
           name='Admin'
