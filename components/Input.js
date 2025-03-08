@@ -11,6 +11,7 @@ function Input({ placeholder, keyType = "default", secureInput = false, onChange
                 <TextInput 
                     style={styles.textField} 
                     placeholder={placeholder} 
+                    placeholderTextColor={COLORS.gray200}
                     keyboardType={keyType} 
                     secureTextEntry={secureInput}
                     onChangeText={(text) => onChangeHandler(text, name)}

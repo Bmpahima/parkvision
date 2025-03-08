@@ -21,7 +21,10 @@ import { COLORS } from './constants/styles';
 import SettingsScreen from './screens/AppScreens/SettingsScreen';
 import ParkingManage from './screens/AdminScreens/ParkingManage';
 import ParkingLotManage from './screens/AdminScreens/ParkingLotManage';
-import ParkingUserManager from './screens/AdminScreens/ParkingUserManager'
+import ParkingUserManager from './screens/AdminScreens/ParkingUserManager';
+import AdminHistoryScreen from './screens/AdminScreens/AdminHistoryScreen';
+import HistoryParkingScreen from './screens/AppScreens/HistoryParkingScreen';
+import ForgotPasswordScreen from './screens/AuthenticationScreens/ForgotPasswordScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -45,6 +48,11 @@ const UserLoginScreen = () => {
         name="signup"
         component={SignUpScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="forgot-password"
+        component={ForgotPasswordScreen}
+        options={{ headerShown: false,  }}
       />
       <Stack.Screen
         name="drawer"
@@ -117,6 +125,35 @@ const AdminStack = () => {
           headerShown: false
         }}   
       />
+      <Stack.Screen 
+        name='AdminHistoryScreen'
+        component={AdminHistoryScreen}
+        options={{
+          headerShown: false
+        }} 
+      />
+    </Stack.Navigator>
+  );
+}
+
+
+const SettingsStack = () => {
+  return ( 
+    <Stack.Navigator>
+      <Stack.Screen 
+        name='SettingsMainScreen' 
+        component={SettingsScreen} 
+        options={{
+          headerShown: false
+        }}
+        />
+      <Stack.Screen 
+        name='HistoryParkingScreen' 
+        component={HistoryParkingScreen} 
+        options={{
+          headerShown: false
+        }}
+        />
     </Stack.Navigator>
   );
 }
@@ -151,7 +188,7 @@ const HomeAppScreen = () => {
       />
       <Drawer.Screen 
         name='Settings'
-        component={SettingsScreen}
+        component={SettingsStack}
         options={{
           drawerIcon: ({size, color}) => <Feather name="settings" size={size} color={color} />
         }}

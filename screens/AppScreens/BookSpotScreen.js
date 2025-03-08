@@ -1,5 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
+import { Ionicons, AntDesign } from "@expo/vector-icons"; 
+
 import { COLORS } from "../../constants/styles";
 import Button from "../../components/Button";
 
@@ -49,156 +51,238 @@ function BookSpotScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reserve Your Spot</Text>
-
-      <View style={styles.detailsContainer}>
-        <Text style={styles.parkingTitle}>{parkingLot.name}</Text>
-        <Text style={styles.parkingSubtitle}>Parking ID: {parkingId}</Text>
-      </View>
-
-      <View style={styles.selectionContainer}>
-        <Text style={styles.sectionTitle}>Choose Arrival Time</Text>
-        <View style={styles.optionWrapper}>
-          {["Immediate", "1/2 hour", "1 hour"].map((option) => (
-            <TouchableOpacity
-              key={option}
-              style={[styles.optionButton, isSelected === option && styles.selectedOption]}
-              onPress={() => handleOptionSelection(option)}
-            >
-              <Text style={[styles.optionText, isSelected === option && styles.selectedText]}>{option}</Text>
-            </TouchableOpacity>
-          ))}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.headerIconContainer}>
+            <Ionicons name="car" size={24} color={COLORS.primary500} style={styles.backIcon} />
+          </View>
+          <View>
+            <Text style={styles.parkingTitle}>{parkingLot.name}</Text>
+            <View style={styles.headerSubtitleContainer}>
+              <Ionicons name="pricetag-outline" size={18} color={COLORS.primary500} />
+              <Text style={styles.parkingSubtitle}>Parking ID: {parkingId}</Text>
+            </View>
+          </View>
         </View>
-      </View>
+        <View style={styles.selectionContainer}>
+          <View style={styles.selectionTitleContainer}>
+            <Ionicons name="time-outline" size={24} color={COLORS.primary500} style={styles.backIcon} />
+            <Text style={styles.selectionTitle}>Choose Arrival Time</Text>
+          </View>
+          <View style={styles.optionWrapper}>
+            {["Immediate", "1/2 hour", "1 hour"].map((option) => (
+              <TouchableOpacity
+                key={option}
+                style={[styles.optionButton, isSelected === option && styles.selectedOption]}
+                onPress={() => handleOptionSelection(option)}
+              >
+                <Text style={[styles.optionText, isSelected === option && styles.selectedText]}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
 
-      <View style={styles.paymentContainer}>
-        <Text style={styles.sectionTitle}>Payment</Text>
-        <ScrollView contentContainerStyle={styles.paymentContent}>
-          <Text style={styles.paymentText}>First Hour: 10₪</Text>
-          <Text style={styles.paymentText}>Second Hour: 8₪</Text>
-          <Text style={styles.paymentText}>From Third Hour: 5₪</Text>
-        </ScrollView>
-      </View>
+        <View style={styles.paymentContainer}>
+          <View style={styles.paymentTitleContainer}>
+          <Ionicons name="cash-outline" size={24} color={COLORS.primary500} style={styles.backIcon} />
+            <Text style={styles.selectionTitle}>Payment</Text>
+          </View>
+          <ScrollView >
+            <View style={styles.paymentItem}>
+              <Text style={styles.paymentLabel}>First Hour:</Text>
+              <Text style={styles.paymentValue}>10₪</Text>
+            </View>
+            <View style={styles.paymentItem}>
+              <Text style={styles.paymentLabel}>Second Hour:</Text>  
+              <Text style={styles.paymentValue}>8₪</Text>          
+            </View>
+            <View style={styles.paymentItem}>
+              <Text style={styles.paymentLabel}>From Third Hour:</Text>
+              <Text style={styles.paymentValue}>5₪</Text>
+            </View>
+          </ScrollView>
+        </View>
+        <View style={styles.noteContainer}>
+          <Ionicons name="information-circle-outline" size={24} color={COLORS.gray600} style={styles.backIcon} />
+          <Text style={styles.note}>
+            Payment starts as soon as you book the parking spot.
+          </Text>
+        </View>
+        
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity style={styles.bookButton} onPress={onBookParking}>
+            <Text style={styles.bookButtonText}>Confirm Booking</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.buttonWrapper}>
-        <Button onPress={onBookParking} buttonStyle={styles.bookButton}>Confirm Booking</Button>
+        
       </View>
-
-      <Text style={styles.note}>
-        * The payment starts as soon as you book the parking spot.
-      </Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
 export default BookSpotScreen;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1
+  },
   container: {
     flex: 1,
-    padding: 24,
-    alignItems: "center",
+    padding: 16
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: COLORS.primary900,
-    marginBottom: 20,
-  },
-  detailsContainer: {
+  headerContainer: {
+    flexDirection: 'row',
     alignItems: "center",
+    backgroundColor: COLORS.gray50,
+    padding: 16,
+    borderRadius: 12,
     marginBottom: 20,
+    shadowColor: COLORS.gray900,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  headerIconContainer: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    backgroundColor: COLORS.primary50,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    marginRight: 16
+  },
+  headerSubtitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'    
   },
   parkingTitle: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 18,
+    fontWeight: "600",
     color: COLORS.primary700,
+    marginBottom: 4
   },
   parkingSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: COLORS.gray700,
     marginTop: 4,
+    marginLeft: 6
   },
   selectionContainer: {
-    width: "100%",
-    alignItems: "center",
+    padding: 16,
     marginBottom: 20,
+    backgroundColor: COLORS.gray50,
+    borderRadius: 12,
+    shadowColor: COLORS.gray900,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  sectionTitle: {
-    fontSize: 20,
+  selectionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20
+  },
+  selectionTitle: {
+    fontSize: 18,
     fontWeight: "600",
     color: COLORS.primary800,
-    marginBottom: 10,
+    marginLeft: 8
   },
   optionWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
   },
   optionButton: {
     flex: 1,
     paddingVertical: 14,
-    backgroundColor: COLORS.gray300,
+    backgroundColor: COLORS.gray100,
     borderRadius: 12,
     marginHorizontal: 6,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: COLORS.gray300,
   },
   optionText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.gray800,
   },
   selectedOption: {
     backgroundColor: COLORS.primary500,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLORS.primary800,
   },
   selectedText: {
     color: COLORS.gray50,
   },
+  paymentTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10
+  },
   paymentContainer: {
-    width: "100%",
-    backgroundColor: COLORS.primary100,
-    padding: 15,
+    backgroundColor: COLORS.gray50,
+    padding: 16,
     borderRadius: 12,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
-  paymentContent: {
-    width: "100%",
-    alignItems: "center",
-  },
-  paymentText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: COLORS.gray900,
+  paymentItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.gray200,
+    padding: 10,
     marginVertical: 5,
   },
+  paymentLabel: {
+    fontSize: 16,
+    color: COLORS.gray600,
+  },
+  paymentValue: {
+    fontSize: 16,
+    color: COLORS.gray900,
+    fontWeight: '600'
+  },
   buttonWrapper: {
-    width: "100%",
     marginVertical: 20,
   },
   bookButton: {
-    backgroundColor: COLORS.primary800,
-    paddingVertical: 14,
-    borderRadius: 15,
+    backgroundColor: COLORS.primary700,
+    paddingVertical: 16,
+    borderRadius: 12,
+    shadowColor: COLORS.gray900,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 4,
+    alignItems: 'center'
+  },
+  bookButtonText: {
+    color: COLORS.gray50,
+    fontSize: 20,
+    fontWeight: '500'
+  },
+  noteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    paddingHorizontal: 16
   },
   note: {
     fontSize: 14,
     color: COLORS.gray600,
-    textAlign: "center",
     fontStyle: "italic",
+    marginLeft: 8,
   },
 });
 

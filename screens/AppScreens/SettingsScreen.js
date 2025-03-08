@@ -6,6 +6,7 @@ import SettingItem from "../../components/SettingItem";
 import { COLORS, UI_COLORS } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
 
+
 function getShortName (fname, lname) {
   let result = "";
   if (fname && fname.length > 0) { 
@@ -17,7 +18,7 @@ function getShortName (fname, lname) {
   return result;
 }
 
-function SettingsScreen() {
+function SettingsScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const userCtx = useContext(UserContext);
@@ -30,15 +31,15 @@ function SettingsScreen() {
         <LinearGradient style={styles.userCircle} colors={[COLORS.primary300, COLORS.primary500]}>
           <Text style={styles.userCircleText}>{shortName}</Text>
         </LinearGradient>
-        <Text style={styles.introText}>{userCtx.user.fname + " " +userCtx.user.lname}</Text>
+        <Text style={styles.introText}>{userCtx.user.fname + " " + userCtx.user.lname}</Text>
         <Text style={styles.introSubtext}>{userCtx.user.email}</Text>
       </View>
     <View style={styles.sectionsContainer}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        <SettingItem icon="person-outline" title="Profile" value="John Doe" onPress={() => {}} />
+        <SettingItem icon="person-outline" title="Profile" value={userCtx.user.fname + " " +userCtx.user.lname} onPress={() => {}} />
         <SettingItem icon="key-outline" title="Password" value="Change" onPress={() => {}} />
-        <SettingItem icon="archive-outline" title="History" value="View" onPress={() => {}}/> 
+        <SettingItem icon="archive-outline" title="History" value="View" onPress={() => { navigation.navigate('HistoryParkingScreen') }}/> 
       </View>
 
       <View style={styles.section}>
@@ -68,7 +69,7 @@ function SettingsScreen() {
         <Text style={styles.logoutButtonText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
-      
+     
     </ScrollView>
   )
 }

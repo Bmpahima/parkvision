@@ -93,7 +93,7 @@ export async function fetchOwnerParkingLots(ownerId) {
 }
 
 // פונקציה שמחזירה מידע מהשרת עבור האדמין על משתמשים החונים בחניון שלו
-export async function fetchParkingLotUsers(parkingLotId) {
+export async function fetchParkingLotUsers (parkingLotId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/parking_lot_users/${parkingLotId}/`);
         
@@ -104,5 +104,28 @@ export async function fetchParkingLotUsers(parkingLotId) {
     }
 }
 
+// פונקציה שמחזירה מהשרת את ההיסטוריה של חניון מסוים - עבור האדמין
+export async function getParkingLotHistory (parkingLotId) {
+    try {
+        const response = await axios.get(`${SERVER_NGROK_URL}/auth/admin/history/${parkingLotId}/`);
+        console.log(response.data);
+        return response.data;
 
+    } catch (error) {
+        return { error: "Couldn't fetch users parked in this parking lot." };
+    }
+}
+
+// פונקציה שמחזירה את ההיסטוריה של משתמש מסוים - עבור יוזר רגיל מתוך ההגדרות
+export async function getUserHistory (userId) {
+    try {
+        console.log(userId)
+        const response = await axios.get(`${SERVER_NGROK_URL}/auth/history/${userId}/`);
+        console.log(response.data);
+        return response.data;
+
+    } catch (error) {
+        return { error: "Couldn't fetch users parked in this parking lot." };
+    }
+}
 

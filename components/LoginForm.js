@@ -1,17 +1,15 @@
 import { useState, useContext } from "react";
-import { View, Text, StyleSheet, Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet, Alert, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { UserContext } from "../store/UserContext";
 import Input from "./Input";
 import Button from "./Button";
-import TextButton from "./TextButton";
 import { COLORS } from "../constants/styles";
 import { loginValidation } from "../util/validators";
 import { login } from "../http/auth";
 
 // רכיב המייצג את טופס הכניסה של המשתמש 
-
 function LoginForm() {
     const navigation = useNavigation();
     const [errorMessages, setErrorMessages] = useState({});
@@ -97,7 +95,6 @@ function LoginForm() {
     
     
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>
                 <Input
                     placeholder="Email"
@@ -118,21 +115,28 @@ function LoginForm() {
                     <Button onPress={onLogin}>Log In</Button>
                 </View>
 
-                <View style={styles.registerContainer}>
-                    <Text style={styles.registerText}>
-                        Don't have an account?{" "}
-                    </Text>
-                    <TextButton
-                        onPress={() => {
-                            console.log("signup pressed");
-                            navigation.navigate("signup");
-                        }}
-                    >
-                        Sign Up
-                    </TextButton>
+                <View style={styles.formFooter}>
+                    <TouchableOpacity style={styles.forgotPasswordContainer} onPress={ () => {navigation.navigate('forgot-password')} }>
+                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                    <View style={styles.orSection}>
+                        <View style={[styles.horizontalLine, { marginLeft: 20 }]}></View>
+                        <Text style={styles.orText}>OR</Text>
+                        <View style={[styles.horizontalLine, { marginRight: 20 }]}></View>
+                    </View>
+                    <View style={styles.registerContainer}>
+                        <Text style={styles.registerText}>
+                            Don't have an account?{" "}
+                        </Text>
+                        <TouchableOpacity onPress={() => {
+                                console.log("signup pressed");
+                                navigation.navigate("signup");
+                            }}>
+                            <Text style={styles.signUpText}>Sign Up</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </TouchableWithoutFeedback>
     );
 }
 
@@ -140,11 +144,45 @@ export default LoginForm;
 
 const styles = StyleSheet.create({
     formContainer: {
-        padding: 20,
+        padding: 40,
+        marginHorizontal: 20,
+        backgroundColor: COLORS.gray50,
+        borderRadius: 20,
+        shadowColor: COLORS.gray900,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
     },
     buttonContainer: {
-        marginTop: 20,
+        marginTop: 16,
         paddingHorizontal: 10,
+    },
+    formFooter: {
+        alignItems: 'center'
+    },
+    forgotPasswordContainer: {
+        marginVertical: 20
+    },
+    forgotPasswordText: {
+        fontWeight: '500',
+        color: COLORS.primary500
+    },
+    orSection: {
+        marginVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    horizontalLine: {
+        flex: 1,
+        borderColor: COLORS.gray200,
+        borderWidth: 1
+    },
+    orText: {
+        marginHorizontal: 8,
+        fontWeight: '600',
+        color: COLORS.gray400
     },
     registerContainer: {
         marginTop: 20,
@@ -153,8 +191,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     registerText: {
-        fontSize: 16,
-        color: COLORS.gray900,
+        color: COLORS.gray600,
         textAlign: "center",
     },
+    signUpText: {
+        color: COLORS.primary700,
+        fontWeight: '600',
+        marginLeft: 4
+    }
 });
