@@ -25,6 +25,7 @@ import ParkingUserManager from './screens/AdminScreens/ParkingUserManager';
 import AdminHistoryScreen from './screens/AdminScreens/AdminHistoryScreen';
 import HistoryParkingScreen from './screens/AppScreens/HistoryParkingScreen';
 import ForgotPasswordScreen from './screens/AuthenticationScreens/ForgotPasswordScreen';
+import UserDetailSettingScreen from './screens/AppScreens/UserDetailSettingScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -154,6 +155,13 @@ const SettingsStack = () => {
           headerShown: false
         }}
         />
+      <Stack.Screen 
+        name='UserDetailSettingScreen'
+        component={UserDetailSettingScreen}
+        options={{
+          headerShown: false
+        }}
+      />
     </Stack.Navigator>
   );
 }

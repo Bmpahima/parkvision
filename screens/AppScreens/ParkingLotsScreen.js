@@ -392,7 +392,7 @@ function ParkingLotScreen({ navigation }) {
       >
         {filteredLocations.map((loc, index) => (
           <Marker
-            key={loc.name}
+            key={loc.id}
             coordinate={{
               latitude: parseFloat(loc.latitude),
               longitude: parseFloat(loc.longitude),

@@ -69,3 +69,41 @@ export async function signUp(formData) {
         };
     }
 }
+
+export async function forgotPassword(email) {
+    try {
+        const response = await axios.post(
+            `${SERVER_NGROK_URL}/auth/forgot-password/`,
+            { email }, 
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        const resData = response.data;
+        console.log(resData.code);
+        return resData; 
+    } catch (error) {
+        return {
+            error: "Unable to send an email, please try again...",
+            errorMessage: error.response ? error.response.data : error.message
+        };
+    }
+}
+
+export async function resetPassword(email, password) {
+    console.log(password);
+    try {
+        const response = await axios.post(
+            `${SERVER_NGROK_URL}/auth/reset-password/`,
+            { email, new_password: password }, 
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        const resData = response.data;
+        return resData; 
+    } catch (error) {
+        return {
+            error: "Unable to logout",
+            errorMessage: error.response ? error.response.data : error.message
+        };
+    }
+}

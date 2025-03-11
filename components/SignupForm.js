@@ -1,11 +1,10 @@
 import { useState, useContext } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { UserContext } from "../store/UserContext";
 import Input from "./Input";
 import Button from "./Button";
-import TextButton from "./TextButton";
 import { COLORS } from "../constants/styles";
 import {signUp} from '../http/auth';
 import { signUpValidation, nameValidator, emailValidator, passwordValidator, lisenceValidator, phoneValidator } from "../util/validators";
@@ -121,12 +120,14 @@ function SignupForm() {
                 onChangeHandler={onChangeHandler} 
                 name={"fname"} 
                 errorMessage={hasSubmitted ? errorMessages?.fname : null}
+                value={formData.fname}
                 />
                 <Input 
                 placeholder="Last Name" 
                 onChangeHandler={onChangeHandler} 
                 name={"lname"} 
                 errorMessage={hasSubmitted ? errorMessages?.lname : null}
+                value={formData.lname}
                 />
                 <Input 
                 placeholder="Email" 
@@ -134,6 +135,7 @@ function SignupForm() {
                 onChangeHandler={onChangeHandler} 
                 name={"email"} 
                 errorMessage={hasSubmitted ? errorMessages?.email : null}
+                value={formData.email}
                 />
                 <Input 
                 placeholder="Password" 
@@ -141,6 +143,7 @@ function SignupForm() {
                 onChangeHandler={onChangeHandler} 
                 name={"password"} 
                 errorMessage={hasSubmitted ? errorMessages?.password : null}
+                value={formData.password}
                 />
                 <Input 
                 placeholder="Phone Number" 
@@ -148,6 +151,7 @@ function SignupForm() {
                 onChangeHandler={onChangeHandler} 
                 name={"phoneNumber"} 
                 errorMessage={hasSubmitted ? errorMessages?.phoneNumber : null}
+                value={formData.phoneNumber}
                 />
                 <Input 
                 placeholder="Lisence Number" 
@@ -155,6 +159,7 @@ function SignupForm() {
                 onChangeHandler={onChangeHandler} 
                 name={"lisenceNumber"} 
                 errorMessage={hasSubmitted ? errorMessages?.lisenceNumber : null}
+                value={formData.lisenceNumber}
                 />
 
 
@@ -162,18 +167,15 @@ function SignupForm() {
                 <Button onPress={onSignUp}>Sign Up</Button>
             </View>
 
-            <View style={styles.registerContainer}>
-                <Text style={styles.registerText}>
-                    Already have an account?{' '}
-                </Text>
-                <TextButton
-                    onPress={() => {
-                        console.log("login pressed");
-                        navigation.navigate('login');
-                    }}
-                >
-                    Sign In
-                </TextButton>
+            <View style={styles.formFooter}>
+                <View style={styles.registerContainer}>
+                    <Text style={styles.registerText}>
+                        Already have an account?{' '}
+                    </Text>
+                    <TouchableOpacity onPress={() => { navigation.navigate("login"); }}>
+                        <Text style={styles.signUpText}>Sign In</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -183,11 +185,22 @@ export default SignupForm;
 
 const styles = StyleSheet.create({
     formContainer: {
-        padding: 20,
+        padding: 40,
+        marginHorizontal: 20,
+        backgroundColor: COLORS.gray50,
+        borderRadius: 20,
+        shadowColor: COLORS.gray900,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
     },
     buttonContainer: {
-        marginTop: 20,
-        paddingHorizontal: 10
+        marginTop: 16,
+        paddingHorizontal: 10,
+    },
+    formFooter: {
+        alignItems: 'center'
     },
     registerContainer: {
         marginTop: 20,
@@ -196,8 +209,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     registerText: {
-        fontSize: 16,
-        color: COLORS.gray900,
-        textAlign: 'center',
+        color: COLORS.gray600,
+        textAlign: "center",
     },
+    signUpText: {
+        color: COLORS.primary700,
+        fontWeight: '600',
+        marginLeft: 4
+    }
 });

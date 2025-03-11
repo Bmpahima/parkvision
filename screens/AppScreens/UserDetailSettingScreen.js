@@ -1,8 +1,10 @@
 import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons"; 
+import { useContext } from "react";
 
 import { COLORS, CAR_COLORS } from "../../constants/styles";
+import { UserContext } from "../../store/UserContext";
 
 function getShortName (fname, lname) {
     let result = "";
@@ -16,10 +18,10 @@ function getShortName (fname, lname) {
   }
 
 // המסך בו מוצגים פרטי המשתמש לאדמין כדי שיידע מי חונה בכל חנייה
-function ParkingUserManager({ route, navigation }) {
-    const { user } = route.params; 
+function UserDetailSettingScreen({ route, navigation }) {
+    const { user } = useContext(UserContext); 
 
-    let shortName = getShortName(user.first_name, user.last_name);
+    let shortName = getShortName(user.fname, user.lname);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -33,7 +35,7 @@ function ParkingUserManager({ route, navigation }) {
                     <LinearGradient style={styles.userCircle} colors={[COLORS.primary300, COLORS.primary500]}>
                         <Text style={styles.userCircleText}>{shortName}</Text>
                     </LinearGradient>
-                    <Text style={styles.headerText}>{user.first_name + " " + user.last_name}</Text>
+                    <Text style={styles.headerText}>{user.fname + " " + user.lname}</Text>
                 </View>
             
                 <View style={styles.card}>
@@ -53,7 +55,7 @@ function ParkingUserManager({ route, navigation }) {
                         </View>
                         <View style={styles.detailTextContainer}>
                             <Text style={styles.label}>Phone Number</Text>
-                            <Text style={styles.value}>{user.phone_number}</Text>
+                            <Text style={styles.value}>{user.phoneNumber}</Text>
                         </View>
                     </View>
                     <View style={styles.divider} />
@@ -63,7 +65,7 @@ function ParkingUserManager({ route, navigation }) {
                         </View>
                         <View style={styles.detailTextContainer}>
                             <Text style={styles.label}>License Number</Text>
-                            <Text style={styles.value}>{user.license_number}</Text>
+                            <Text style={styles.value}>{user.lisenceNumber}</Text>
                         </View>
                     </View>
                     
@@ -76,17 +78,17 @@ function ParkingUserManager({ route, navigation }) {
                         <View style={styles.detailVehicleTextContainer}>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Year</Text>
-                                <Text style={styles.valueVehicle}>{user.car_year}</Text>
+                                <Text style={styles.valueVehicle}>{"2000"}</Text>
                             </View>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Model</Text>
-                                <Text style={styles.valueVehicle}>{user.car_model}</Text>
+                                <Text style={styles.valueVehicle}>{"Mazda"}</Text>
                             </View>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Color</Text>
                                 <View style={styles.colorContainer}>
-                                    <View style={[styles.colorSwatch, { backgroundColor: CAR_COLORS[user.car_color] || '#FFFFFF'} ]}></View>
-                                    <Text style={styles.valueVehicle}>{user.car_color}</Text>
+                                    <View style={[styles.colorSwatch, { backgroundColor: CAR_COLORS[" לא ידוע"] || '#FFFFFF'} ]}></View>
+                                    <Text style={styles.valueVehicle}>{"לבן"}</Text>
                                 </View>
                             </View>
                         </View>
@@ -99,7 +101,7 @@ function ParkingUserManager({ route, navigation }) {
     );
 }
 
-export default ParkingUserManager;
+export default UserDetailSettingScreen;
 
 const styles = StyleSheet.create({
     container: {

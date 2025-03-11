@@ -102,6 +102,7 @@ function LoginForm() {
                     onChangeHandler={onChangeHandler}
                     name={"email"}
                     errorMessage={hasSubmitted ? errorMessages?.email : null}
+                    value={formData.email}
                 />
                 <Input
                     placeholder="Password"
@@ -109,6 +110,7 @@ function LoginForm() {
                     onChangeHandler={onChangeHandler}
                     name={"password"}
                     errorMessage={hasSubmitted ? errorMessages?.password : null}
+                    value={formData.password}
                 />
 
                 <View style={styles.buttonContainer}>
@@ -129,7 +131,6 @@ function LoginForm() {
                             Don't have an account?{" "}
                         </Text>
                         <TouchableOpacity onPress={() => {
-                                console.log("signup pressed");
                                 navigation.navigate("signup");
                             }}>
                             <Text style={styles.signUpText}>Sign Up</Text>
@@ -200,3 +201,7 @@ const styles = StyleSheet.create({
         marginLeft: 4
     }
 });
+
+// const [hasEmailSubmitted, setHasEmailSubmitted] = useState(false);
+// const [hasCodeSubmitted, setHasCodeSubmitted] = useState(false);
+// const [hasPasswordSubmitted, setHasPasswordSubmitted] = useState(false);

@@ -37,7 +37,7 @@ function SettingsScreen({ navigation }) {
     <View style={styles.sectionsContainer}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        <SettingItem icon="person-outline" title="Profile" value={userCtx.user.fname + " " +userCtx.user.lname} onPress={() => {}} />
+        <SettingItem icon="person-outline" title="Profile" value={userCtx.user.fname + " " +userCtx.user.lname} onPress={() => {navigation.navigate('UserDetailSettingScreen')  }} />
         <SettingItem icon="key-outline" title="Password" value="Change" onPress={() => {}} />
         <SettingItem icon="archive-outline" title="History" value="View" onPress={() => { navigation.navigate('HistoryParkingScreen') }}/> 
       </View>
@@ -62,7 +62,7 @@ function SettingsScreen({ navigation }) {
       </View>
     </View>
     <View style={styles.buttonSection}>
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => { navigation.navigate('logout') }}>
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.logoutButton, styles.deleteAcc]}>

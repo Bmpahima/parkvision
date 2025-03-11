@@ -1,42 +1,70 @@
-import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet, Image, ScrollView, SafeAreaView, KeyboardAvoidingView } from "react-native";
+import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, StatusBar, Platform, KeyboardAvoidingView } from "react-native";
 
+import { COLORS } from "../../constants/styles";
 import SignupForm from "../../components/SignupForm";
 
 function SignUpScreen () {
+    
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <StatusBar style='dark' />
-            {/* <ScrollView> */}
-            {/* <KeyboardAvoidingView behavior='position'> */}
-                <View style={styles.container}>
-                    {/* <Image source={require('../../images/rb_1841.png')} style={styles.image}/>   */}
-                    <Text style={styles.title}>ParkVision</Text>
-                    <SignupForm />
-                </View>
-           {/* </KeyboardAvoidingView> */}
-           {/* </ScrollView> */}
-        </SafeAreaView>
+        <> 
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+            <SafeAreaView style={styles.safeArea}>
+                <KeyboardAvoidingView 
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={styles.keyboardAvoidingView}
+                    >
+                    <ScrollView 
+                        contentContainerStyle={styles.container}
+                        showsVerticalScrollIndicator={false}
+                        >
+                        <View style={styles.header}>
+                            <Image source={require('../../images/rb_1841.png')} style={styles.image}/>  
+                            <View style={styles.headerTextContainer}>
+                                <Text style={styles.titleText}>ParkVision</Text>
+                                <Text style={styles.subtitleText}>Create a new account</Text>
+                            </View> 
+                        </View>
+                        <SignupForm />
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </>
     );
 }
 
 export default SignUpScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
+    safeArea: {
+        flex: 1
     },
-    title: {
-        textAlign: 'center',
+    keyboardAvoidingView: {
+        flex: 1,
+    },
+    container: {
+        flexGrow: 1,
+        paddingTop: 40,
+        paddingBottom: 40,
+    },
+    headerTextContainer: {
+        alignItems: 'center',
+        marginBottom: 40
+    },
+    titleText: {
         fontSize: 36,
         fontWeight: 'bold',
-        color: "#0253ff",
-        marginBottom: 36
+        letterSpacing: 1,
+        color: COLORS.primary700,
+        marginBottom: 10
+    },
+    subtitleText: {
+        fontSize: 16,
+        color: COLORS.gray700,
     },
     image: {
-        width: 180,
-        height: 180,
-        alignSelf: 'center'
+        width: 160,
+        height: 160,
+        alignSelf: 'center',
+        marginBottom: 16
     }
 });

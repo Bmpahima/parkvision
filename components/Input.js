@@ -4,7 +4,7 @@ import { COLORS } from "../constants/styles";
 
 // רכיב לקלט של הטפסים של הכניסה והרשמה של משתמשים עם אופציות לשינוי המקלדת והסתרת התויים 
 
-function Input({ placeholder, keyType = "default", secureInput = false, onChangeHandler, name, errorMessage }) {
+function Input({ placeholder, keyType = "default", secureInput = false, onChangeHandler, name, errorMessage, value }) {
     return (
         <View style={styles.container}>
             <View style={[styles.inputContainer, errorMessage && styles.errorField]}>
@@ -15,6 +15,8 @@ function Input({ placeholder, keyType = "default", secureInput = false, onChange
                     keyboardType={keyType} 
                     secureTextEntry={secureInput}
                     onChangeText={(text) => onChangeHandler(text, name)}
+                    maxLength={name === 'code' && 6}
+                    value={value}
                 />
             </View>
             {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
