@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useLayoutEffect, useCallback } from "react";
-import { Text, View, FlatList, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import React, { useState, useLayoutEffect, useCallback } from "react";
+import { Text, View, FlatList, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, StatusBar } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons"; 
 
 
 import ParkingSpot from "../../components/ParkingSpot";
 import { COLORS } from "../../constants/styles";
-import Button from "../../components/Button";
 import { fetchParkingLotUsers } from "../../http/parkingData";
 
 
@@ -56,8 +55,9 @@ function ParkingLotManage({ route, navigation }) {
     
 
     return (
+        <>
+        <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
         <SafeAreaView style={styles.safeArea}>
-            <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.innerHeader}>
                     <FontAwesome5 name="parking" size={24} color={COLORS.primary700} />
@@ -132,8 +132,8 @@ function ParkingLotManage({ route, navigation }) {
                     <Text style={styles.buttonText}>History</Text>
                 </TouchableOpacity>
             </View>
-            </View>
         </SafeAreaView>
+        </>
     );
 }
 
@@ -143,10 +143,9 @@ export default ParkingLotManage;
 const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
+      backgroundColor: COLORS.gray100,
     },
-    container: {
-        flex: 1,
-    },
+    
     header: {
         margin: 16,
         backgroundColor: COLORS.gray50,

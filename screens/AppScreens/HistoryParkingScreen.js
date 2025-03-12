@@ -133,7 +133,8 @@ export default HistoryParkingScreen;
 
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 1
+        flex: 1,
+        backgroundColor: COLORS.gray100,
     },
     header: {
         position: 'relative',

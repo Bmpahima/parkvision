@@ -109,7 +109,7 @@ const AdminStack = () => {
         name='AdminHomePage' 
         component={ParkingManage} 
         options={{
-          headerShown: false
+          headerShown: false,
         }}
         />
       <Stack.Screen 
@@ -207,7 +207,12 @@ const HomeAppScreen = () => {
           component={AdminStack}
           options={{
             drawerIcon: ({size, color}) => <AntDesign name="user" size={size} color={color} />,
-            headerStyle: {backgroundColor: COLORS.primary800},
+            headerStyle: {
+              backgroundColor: COLORS.primary800,
+              elevation: 0,
+              shadowOpacity: 0,
+              borderBottomWidth: 0
+            },
             headerTitleStyle: {color: COLORS.gray50},
             headerTintColor: COLORS.gray50
           }}

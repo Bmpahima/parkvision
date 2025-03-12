@@ -126,7 +126,8 @@ export default BookSpotScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1
+    flex: 1,
+    backgroundColor: COLORS.gray100,
   },
   container: {
     flex: 1,

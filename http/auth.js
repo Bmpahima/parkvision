@@ -32,6 +32,7 @@ export async function logout(id) {
         );
 
         const resData = response.data;
+        console.log(resData);
         return resData; 
     } catch (error) {
         console.log(error);
@@ -102,7 +103,24 @@ export async function resetPassword(email, password) {
         return resData; 
     } catch (error) {
         return {
-            error: "Unable to logout",
+            error: "Unable to reset you password. Please try again later.",
+            errorMessage: error.response ? error.response.data : error.message
+        };
+    }
+}
+
+export async function deleteAccount(userId) {
+    try {
+        const response = await axios.delete(
+            `${SERVER_NGROK_URL}/auth/delete-account/${userId}/`,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        const resData = response.data;
+        return resData; 
+    } catch (error) {
+        return {
+            error: "Unable to delete your account. Please try again later.",
             errorMessage: error.response ? error.response.data : error.message
         };
     }

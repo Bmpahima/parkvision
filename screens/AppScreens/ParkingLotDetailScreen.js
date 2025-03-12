@@ -176,6 +176,7 @@ function ParkingLotDetailScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: COLORS.gray100,
   },
   container: {
     flex: 1,

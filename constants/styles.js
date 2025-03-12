@@ -128,22 +128,27 @@ export const CAR_COLORS = {
   "שן פיל": "#FFFFF0",
 };
 
-  const PARKING_COLORS = {
-    AVAILABLE: {
-      background: "#4CAF50", // ירוק
-      border: "#388E3C", // ירוק כהה
-    },
-    RESERVED: {
-      background: "#FFC107", // צהוב
-      border: "#FFA000", // צהוב כהה
-    },
-    OCCUPIED: {
-      background: "#F44336", // אדום
-      border: "#D32F2F", // אדום כהה
-    },
-  };  
+
+function getShortName (fname, lname) {
+  let result = "";
+  if (fname && fname.length > 0) { 
+    result = result + fname[0]
+  }
+  if (lname && lname.length > 0) { 
+    result = result + lname[0]
+  }
+  return result.toUpperCase();
+}
+
+export function fixReversedHebrew(text) {
+  const reversed = text.split("").reverse().join("");
+  return reversed;
+}
+
+
+
   
-  export default PARKING_COLORS;
+export default getShortName;
   
   
 

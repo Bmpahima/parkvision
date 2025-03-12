@@ -1,27 +1,43 @@
 import { useState, useContext } from "react"
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import SettingItem from "../../components/SettingItem";
-import { COLORS, UI_COLORS } from "../../constants/styles";
+import getShortName, { COLORS, UI_COLORS } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
-
-
-function getShortName (fname, lname) {
-  let result = "";
-  if (fname && fname.length > 0) { 
-    result = result + fname[0]
-  }
-  if (lname && lname.length > 0) { 
-    result = result + lname[0]
-  }
-  return result;
-}
+import { deleteAccount } from "../../http/auth";
 
 function SettingsScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const userCtx = useContext(UserContext);
+
+  const onPressDeleteAccount = async () => {
+    const sure = await new Promise((resolve) => {
+        Alert.alert(
+            "Park Vision",
+            "Are you sure you want to delete your account?",
+            [
+                { text: "Yes", onPress: () => resolve(true) },
+                { text: "No", onPress: () => resolve(false) }
+            ]
+        );
+    });
+    if (!sure) {
+        return;
+    }
+
+    try {
+        const response = await deleteAccount(userCtx.user.id);
+        if (response.success) {
+            navigation.navigate("logout", { deleted: true });
+        } else {
+            Alert.alert("Park Vision", "An error occurred. Unable to delete your account.");
+        }
+    } catch (error) {
+        Alert.alert("Park Vision", "An error occurred. Unable to delete your account.");
+    }
+  };
 
   let shortName = getShortName(userCtx.user.fname, userCtx.user.lname);
   
@@ -37,7 +53,7 @@ function SettingsScreen({ navigation }) {
     <View style={styles.sectionsContainer}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        <SettingItem icon="person-outline" title="Profile" value={userCtx.user.fname + " " +userCtx.user.lname} onPress={() => {navigation.navigate('UserDetailSettingScreen')  }} />
+        <SettingItem icon="person-outline" title="Profile" value={(userCtx.user.fname + " " + userCtx.user.lname)} onPress={() => {navigation.navigate('UserDetailSettingScreen')  }} />
         <SettingItem icon="key-outline" title="Password" value="Change" onPress={() => {}} />
         <SettingItem icon="archive-outline" title="History" value="View" onPress={() => { navigation.navigate('HistoryParkingScreen') }}/> 
       </View>
@@ -65,7 +81,7 @@ function SettingsScreen({ navigation }) {
       <TouchableOpacity style={styles.logoutButton} onPress={() => { navigation.navigate('logout') }}>
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.logoutButton, styles.deleteAcc]}>
+      <TouchableOpacity style={[styles.logoutButton, styles.deleteAcc]} onPress={onPressDeleteAccount}>
         <Text style={styles.logoutButtonText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
@@ -77,6 +93,7 @@ function SettingsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.gray100,
   },
   intro: {
     flex: 1,
@@ -90,6 +107,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
+    borderWidth: 2,
+    borderColor: COLORS.gray200
   },
   userCircleText: {
     fontSize: 32,

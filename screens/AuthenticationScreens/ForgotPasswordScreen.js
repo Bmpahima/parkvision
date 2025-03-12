@@ -124,7 +124,7 @@ function ForgotPasswordScreen({ navigation }) {
               <View style={styles.headerTextContainer}>
                 <Text style={styles.titleText}>Reset Password</Text>
                 <Text style={styles.subtitleText}>
-                  {!emailSubmitted ? "Enter your email to receive a password reset code" : "Enter the verification code"}
+                  {!emailSubmitted ? "Enter your email to receive a password reset code" : !codeSubmitted ?  "Enter the verification code" : "Enter your new password"}
                 </Text>
               </View>
             </View>

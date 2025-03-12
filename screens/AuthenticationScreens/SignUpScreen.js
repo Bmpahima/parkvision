@@ -36,7 +36,8 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 1
+        flex: 1,
+        backgroundColor: COLORS.gray100,
     },
     keyboardAvoidingView: {
         flex: 1,

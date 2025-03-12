@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, FlatList, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, FlatList, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
 import { Ionicons, AntDesign } from "@expo/vector-icons"; 
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -71,6 +71,8 @@ function AdminHistoryScreen ({ navigation, route }) {
     const filteredHistory = historyFilter();
 
     return (
+        <>
+        <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
         <SafeAreaView style={styles.safeArea}>
             <TouchableOpacity style={styles.header} onPress={navigation.goBack}>
                 <Ionicons name="chevron-back" size={24} color={COLORS.primary500} style={styles.backIcon} />
@@ -126,6 +128,7 @@ function AdminHistoryScreen ({ navigation, route }) {
             </View>
         ) }
         </SafeAreaView>
+        </>
     );
 }
 
@@ -133,7 +136,8 @@ export default AdminHistoryScreen;
 
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 1
+        flex: 1,
+        backgroundColor: COLORS.gray100,
     },
     header: {
         position: 'relative',

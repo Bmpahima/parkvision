@@ -7,6 +7,10 @@ const initialValue = {
   email: "",
   phoneNumber: "",
   lisenceNumber: "",
+  car_year: "",
+  car_model: "",
+  car_color: "",
+  car_type: ""
 };
 
 export const UserContext = createContext({

@@ -4,7 +4,7 @@ import { logout } from "../../http/auth";
 import { UserContext } from "../../store/UserContext";
 import { Alert } from "react-native";
 
-function LogoutScreen({ navigation }) {
+function LogoutScreen({ navigation, route }) {
     const userCtx = useContext(UserContext);
 
     useEffect(() => {
@@ -12,9 +12,10 @@ function LogoutScreen({ navigation }) {
 
         async function userLogout () {
             try {
-                const response = await logout(userId);
-
-                console.log(response);
+                if (!(route?.params?.deleted)) {
+                    const response = await logout(userId);
+                    console.log(response);
+                }
             }
             catch (error) {
                 console.log(error);

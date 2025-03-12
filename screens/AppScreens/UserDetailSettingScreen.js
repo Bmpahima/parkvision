@@ -3,22 +3,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons"; 
 import { useContext } from "react";
 
-import { COLORS, CAR_COLORS } from "../../constants/styles";
+import getShortName, { COLORS, CAR_COLORS, fixReversedHebrew } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
 
-function getShortName (fname, lname) {
-    let result = "";
-    if (fname && fname.length > 0) { 
-      result = result + fname[0]
-    }
-    if (lname && lname.length > 0) { 
-      result = result + lname[0]
-    }
-    return result;
-  }
-
 // המסך בו מוצגים פרטי המשתמש לאדמין כדי שיידע מי חונה בכל חנייה
-function UserDetailSettingScreen({ route, navigation }) {
+function UserDetailSettingScreen({ navigation }) {
     const { user } = useContext(UserContext); 
 
     let shortName = getShortName(user.fname, user.lname);
@@ -32,7 +21,7 @@ function UserDetailSettingScreen({ route, navigation }) {
             <ScrollView contentContainerStyle={styles.content}>
                 
                 <View style={styles.header}>
-                    <LinearGradient style={styles.userCircle} colors={[COLORS.primary300, COLORS.primary500]}>
+                    <LinearGradient style={styles.userCircle} colors={[COLORS.primary300, COLORS.primary600]}>
                         <Text style={styles.userCircleText}>{shortName}</Text>
                     </LinearGradient>
                     <Text style={styles.headerText}>{user.fname + " " + user.lname}</Text>
@@ -78,17 +67,17 @@ function UserDetailSettingScreen({ route, navigation }) {
                         <View style={styles.detailVehicleTextContainer}>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Year</Text>
-                                <Text style={styles.valueVehicle}>{"2000"}</Text>
+                                <Text style={styles.valueVehicle}>{user.car_year}</Text>
                             </View>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Model</Text>
-                                <Text style={styles.valueVehicle}>{"Mazda"}</Text>
+                                <Text style={styles.valueVehicle}>{fixReversedHebrew(user.car_type)}</Text>
                             </View>
                             <View style={styles.vehicleDetailContainer}>
                                 <Text style={styles.label}>Color</Text>
                                 <View style={styles.colorContainer}>
-                                    <View style={[styles.colorSwatch, { backgroundColor: CAR_COLORS[" לא ידוע"] || '#FFFFFF'} ]}></View>
-                                    <Text style={styles.valueVehicle}>{"לבן"}</Text>
+                                    <View style={[styles.colorSwatch, { backgroundColor: CAR_COLORS[fixReversedHebrew(user.car_color)] || '#FFFFFF'} ]}></View>
+                                    <Text style={styles.valueVehicle}>{fixReversedHebrew(user.car_color)}</Text>
                                 </View>
                             </View>
                         </View>
@@ -143,6 +132,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 12,
+        borderWidth: 2,
+        borderColor: COLORS.gray200
     },
     userCircleText: {
         fontSize: 32,

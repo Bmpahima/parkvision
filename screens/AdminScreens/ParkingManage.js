@@ -1,11 +1,12 @@
 import { useContext, useCallback, useState } from "react";
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, StatusBar } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons"; 
 
-import Button from "../../components/Button";
 import { COLORS } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
 import { fetchOwnerParkingLots } from "../../http/parkingData";
+import { TouchableOpacity } from "react-native";
 
 
 // זה המסך שבו רואים את רשימת החניונים של אותו admin
@@ -14,6 +15,26 @@ function ParkingManage({ navigation }) {
   const [parkingLots, setParkingLots] = useState([]);  
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null); 
+
+  
+  const ParkingItem = ({ parkingLot, onPress}) => {
+    return (
+      <TouchableOpacity style={styles.parkingItemContainer} onPress={onPress}>
+        <View style={styles.parkingItemContentContainer}>
+          <View style={styles.iconContainer}>
+              <Ionicons name="car" size={28} color={COLORS.primary500} />
+          </View>
+          <View style={styles.parkingItemTextContainer}>
+              <Text style={styles.parkingNameText}>{parkingLot.name}</Text>
+              <Text style={styles.parkingSubText}>{parkingLot.parking_spots + " parking spots"}</Text>
+          </View>
+        </View>
+        <TouchableOpacity>
+          <Ionicons name="chevron-forward" size={24} color={COLORS.gray400} />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -25,6 +46,7 @@ function ParkingManage({ navigation }) {
             setError(response.error);
           } else {
             setParkingLots(response);
+            console.log(response);
           }
         } catch (err) {
           setError("Failed to fetch parking lots.");
@@ -37,31 +59,34 @@ function ParkingManage({ navigation }) {
   );
 
   return (
+    <>
+    <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hello, {userCtx.user.fname}</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerSubText}>Welcome back,</Text>
+        <Text style={styles.headerText}>{userCtx.user.fname}</Text>
       </View>
-      
+      <View style={styles.listTitleContainer}>
+        <Text style={styles.listTitle}>Your Parking Areas</Text>
+        <View style={styles.separator}></View>
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary500} style={styles.loader} />
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.sectionTitle}>Select Parking Area</Text>
+          
           <View style={styles.buttonContainer}>
             {parkingLots.length > 0 ? (
               parkingLots.map((park) => (
-                <Button
-                  key={park.name}
+                <ParkingItem
+                  key={park.id}
+                  parkingLot={park}
                   onPress={() => {
                     navigation.navigate('ParkingManage', { parkingLotDetail: park, parkings: park.parkings });
                   }}
-                  buttonStyle={styles.button}
-                  labelStyle={styles.buttonText}
-                >
-                  {park.name}
-                </Button>
+                />
               ))
             ) : (
               <Text style={styles.noDataText}>No parking lots available</Text>
@@ -70,6 +95,7 @@ function ParkingManage({ navigation }) {
         </ScrollView>
       )}
     </SafeAreaView>
+    </>
   );
 }
 
@@ -80,42 +106,79 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray100,
   },
-  header: {
-    paddingVertical: 20,
-    alignItems: "center",
+  headerContainer: {
+    padding: 28,
+    backgroundColor: COLORS.primary800,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    marginBottom: 10,
+    shadowColor: COLORS.gray900,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   headerText: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
+    color: COLORS.gray50,
+    marginTop: 8,
+  },
+  headerSubText: {
+    fontSize: 18,
+    color: COLORS.primary100,
+  },
+  listTitleContainer: {
+    padding: 20
+  },
+  listTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  separator: {
+    width: 50,
+    height: 4,
+    backgroundColor: COLORS.primary500,
+    borderRadius: 10,
+    marginVertical: 10
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 20,
     paddingBottom: 40,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: COLORS.gray700,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  buttonContainer: {
-    gap: 15,
-  },
-  button: {
-    backgroundColor: COLORS.primary500,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+  parkingItemContainer: {
+    padding: 16,
+    backgroundColor: COLORS.gray50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 16,
+    shadowColor: COLORS.gray900,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 4,
   },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: COLORS.gray50,
+  parkingItemContentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    padding: 12,
+    backgroundColor: COLORS.primary50,
+    borderRadius: 11,
+    marginRight: 12
+  },
+  parkingItemTextContainer: {
+    gap: 4
+  },
+  parkingNameText: {
+    fontWeight: '600',
+    fontSize: 18
+  },
+  parkingSubText: {
+    fontSize: 15,
+    color: COLORS.gray500
   },
   loader: {
     marginTop: 50,

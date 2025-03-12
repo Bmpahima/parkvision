@@ -18,6 +18,7 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
+
 function ParkingLotScreen({ navigation }) {
   const [userLocation, setUserLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -277,13 +278,16 @@ function ParkingLotScreen({ navigation }) {
     scrollOffsetRef.current = event.nativeEvent.contentOffset.x;
   }, []);
 
-  // פונקציה שמופעלת כאשר הגלילה של הרשימה של הכרטיסיטת נעצרת
-
-
   // החניונים המעודכנים בהתאם לשאילתא
-  const filteredLocations = parkingLotLocations.filter((loc) =>
+  let filteredLocations = parkingLotLocations.filter((loc) =>
     loc.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  filteredLocations = filteredLocations.sort((p1, p2) => {
+    const d1 = distances[p1.name] ?? Infinity;
+    const d2 = distances[p2.name] ?? Infinity;
+    return d1 - d2;
+  })
 
   // אם אנחנו טוענים מידע 
   if (isLoading) {

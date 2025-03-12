@@ -45,7 +45,10 @@ function HomeScreen({ navigation, route }) {
           [
             {
               text: "OK",
-              onPress: () => navigation.navigate("ParkingLotHome"),
+              onPress: () => navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'ParkingLotHome' }],
+                              }),
             },
           ]
         );
@@ -60,7 +63,10 @@ function HomeScreen({ navigation, route }) {
           [
             {
               text: "OK",
-              onPress: () => navigation.navigate("ParkingLotHome"),
+              onPress: () => navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'ParkingLotHome' }],
+                              }),
             },
           ]
         );
@@ -125,7 +131,17 @@ function HomeScreen({ navigation, route }) {
         }
 
         userCtx.stopParking();
-        Alert.alert("Success", "Parking session ended successfully.");
+        Alert.alert("Success", "Parking session ended successfully.", [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'ParkingLotHome' }],
+              });
+            }
+          }
+        ]);
       } catch (error) {
         console.log("Error stopping parking:", error);
         Alert.alert("Error", "Could not stop parking session.");
@@ -149,6 +165,7 @@ function HomeScreen({ navigation, route }) {
       seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
     });
   };
+
 
   useEffect(() => {
     return () => clearInterval(timerRef.current);
@@ -180,29 +197,16 @@ function HomeScreen({ navigation, route }) {
           <View style={styles.startStop}>
             <Button
               onPress={startTimer}
-              buttonStyle={[
-                styles.button,
-                { backgroundColor: COLORS.primary400, paddingHorizontal: 40 },
-              ]}
-            >
+              buttonStyle={[ styles.button, { backgroundColor: COLORS.primary600, paddingHorizontal: 40 }, ]} labelStyle={{fontWeight: '500'}} >
+
               Start
             </Button>
             <Button
               onPress={stopTimer}
-              buttonStyle={[
-                styles.button,
-                { backgroundColor: COLORS.primary400, paddingHorizontal: 40 },
-              ]}
-            >
+              buttonStyle={[ styles.button, { backgroundColor: COLORS.primary600, paddingHorizontal: 40 }, ]} labelStyle={{fontWeight: '500'}} >
               Stop
             </Button>
           </View>
-          <Button
-            onPress={() => console.log("Change button pressed")}
-            buttonStyle={[styles.button, { backgroundColor: COLORS.primary300 }]}
-          >
-            Change
-          </Button>
         </View>
       </View>
     </SafeAreaView>
@@ -252,7 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 25,
-    marginVertical: 10,
+    marginVertical: 20,
   },
   startStop: {
     flexDirection: "row",
