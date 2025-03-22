@@ -56,10 +56,10 @@ function AdminHistoryScreen ({ navigation, route }) {
             if (selectedFilterOption === 'Today') {
                 return history.end_date === todayStr;
             }
-            else if (selectedFilterOption === 'Today') {
+            else if (selectedFilterOption === 'This Week') {
                 return historyDate >= firstDayOfWeek;
             }
-            else if (selectedFilterOption === 'Today') {
+            else if (selectedFilterOption === 'This Month') {
                 return historyDate >= firstDayOfMonth;
             }
             else {

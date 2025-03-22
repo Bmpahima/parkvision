@@ -310,6 +310,8 @@ function ParkingLotScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar
         barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
       />
 
       <View style={styles.searchContainer}>

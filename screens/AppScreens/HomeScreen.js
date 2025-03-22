@@ -24,6 +24,8 @@ function HomeScreen({ navigation, route }) {
   const [reservedUntil, setReservedUntil] = useState(null);
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
+  const hasExpiredRef = useRef(false);
+
 
   useEffect(() => {
     if (!isFocused && !timerRunning) {
@@ -116,16 +118,12 @@ function HomeScreen({ navigation, route }) {
   // Stop Timer and Unbook Parking
   const stopTimer = async () => {
     if (timerRunning) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-      setTimerRunning(false);
 
       try {
         const userId = userCtx.user.id;
         const parkingId = userCtx.parkingId;
 
         const response = await unBookParking(parkingId, userId);
-
         if (!response || response.error) {
           throw new Error("Failed to stop parking session.");
         }
@@ -142,6 +140,9 @@ function HomeScreen({ navigation, route }) {
             }
           }
         ]);
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+        setTimerRunning(false);
       } catch (error) {
         console.log("Error stopping parking:", error);
         Alert.alert("Error", "Could not stop parking session.");
@@ -154,11 +155,23 @@ function HomeScreen({ navigation, route }) {
     const now = Date.now();
     const elapsedTime = now - startTimeRef.current;
     const totalSeconds = Math.floor(elapsedTime / 1000);
+  
 
+    // checkkkkkkkkkkkkkkkkkkkkk
+    if (!hasExpiredRef.current && reservedUntil && now > reservedUntil.getTime()) {
+      hasExpiredRef.current = true;
+      Alert.alert(
+        "Time's Up",
+        "Your reserved parking spot was released because you didn’t arrive on time."
+      );
+      stopTimer();
+    }
+  
+    // עדכון תצוגת השעון
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-
+  
     setTimeValue({
       hours: hours < 10 ? `0${hours}` : `${hours}`,
       minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
