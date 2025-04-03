@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useCallback } from "react";
 import { Text, View, FlatList, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, StatusBar } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons"; 
+import { Ionicons, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"; 
 
 
 import ParkingSpot from "../../components/ParkingSpot";
@@ -48,7 +48,10 @@ function ParkingLotManage({ route, navigation }) {
             navigation.navigate("ParkingUserManager", { user: driver }); 
         } else if (saved && driver) {
             navigation.navigate("ParkingUserManager", { user: driver }); 
-        } else {
+        } else if (occupied && !driver) {
+            Alert.alert("ParkVision", `Unknown Driver is Parking Here!`, [{ text: "Cancel", onPress: () => {} }]);
+        }
+        else {
             Alert.alert("ParkVision", `This Parking is free`, [{ text: "Cancel", onPress: () => {} }]);
         }
     };
@@ -59,9 +62,16 @@ function ParkingLotManage({ route, navigation }) {
         <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.header}>
-                <View style={styles.innerHeader}>
-                    <FontAwesome5 name="parking" size={24} color={COLORS.primary700} />
+                <View style={styles.headerContainer}>
+                    <View style={styles.innerHeader}>
+                        <FontAwesome5 name="parking" size={24} color={COLORS.primary700} />
                     <Text style={styles.titleText}>{parkingLotDetail.name}</Text>
+                    </View >
+                    <View>
+                        <TouchableOpacity onPress={() => navigation.navigate('LiveStream')} style={{marginBottom: 10}}>
+                            <MaterialCommunityIcons name="video-wireless-outline" size={25} color={COLORS.primary800} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.availableContainer}>
                     <View style={styles.outerStat}>
@@ -145,7 +155,11 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: COLORS.gray100,
     },
-    
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     header: {
         margin: 16,
         backgroundColor: COLORS.gray50,
@@ -156,6 +170,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
+    },
+    liveStream: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     innerHeader: {
         flexDirection: 'row',

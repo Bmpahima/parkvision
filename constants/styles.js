@@ -1,5 +1,6 @@
 export const COLORS = {
     
+    primary950: "#0F172A",
     primary900: "#022a99",   // Darkest blue
     primary800: "#0234b3",   // Even darker
     primary700: "#023fcc",   // Darker blue

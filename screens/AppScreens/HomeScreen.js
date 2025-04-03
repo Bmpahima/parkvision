@@ -118,7 +118,9 @@ function HomeScreen({ navigation, route }) {
   // Stop Timer and Unbook Parking
   const stopTimer = async () => {
     if (timerRunning) {
-
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setTimerRunning(false);
       try {
         const userId = userCtx.user.id;
         const parkingId = userCtx.parkingId;
@@ -140,9 +142,7 @@ function HomeScreen({ navigation, route }) {
             }
           }
         ]);
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-        setTimerRunning(false);
+        
       } catch (error) {
         console.log("Error stopping parking:", error);
         Alert.alert("Error", "Could not stop parking session.");

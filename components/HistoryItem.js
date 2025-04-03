@@ -24,7 +24,9 @@ function HistoryItem ({ parking_lot="Central Parking Lot",
                         end_date="2024-03-02",
                         license_number="123-456-789",
                         first_name="David",
-                        last_name="Cohen" }) {
+                        last_name="Cohen",
+                        parking
+                    }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
@@ -42,7 +44,7 @@ function HistoryItem ({ parking_lot="Central Parking Lot",
             </View>
             <View style={styles.loc}>
                 <SimpleLineIcons name="location-pin" size={24} color={COLORS.primary700} />
-                <Text style={styles.parkLoc}>{parking_lot}</Text>
+                <Text style={styles.parkLoc}>{parking ? `${parking_lot} | ${parking}`: parking_lot }</Text>
             </View>
             <View style={styles.dates}>
                 <View style={styles.dateSection}>

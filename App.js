@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import LoginScreen from './screens/AuthenticationScreens/LoginScreen';
 import WelcomeScreen from './screens/AuthenticationScreens/WelcomeScreen';
@@ -26,6 +27,8 @@ import AdminHistoryScreen from './screens/AdminScreens/AdminHistoryScreen';
 import HistoryParkingScreen from './screens/AppScreens/HistoryParkingScreen';
 import ForgotPasswordScreen from './screens/AuthenticationScreens/ForgotPasswordScreen';
 import UserDetailSettingScreen from './screens/AppScreens/UserDetailSettingScreen';
+import LiveStreamScreen from './screens/AdminScreens/LiveStreamScreen';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -116,9 +119,9 @@ const AdminStack = () => {
         name='ParkingManage' 
         component={ParkingLotManage} 
         options={{
-          headerShown: false
+          headerShown: false,
         }}
-        />
+      />
       <Stack.Screen 
         name='ParkingUserManager'
         component={ParkingUserManager} 
@@ -132,6 +135,14 @@ const AdminStack = () => {
         options={{
           headerShown: false
         }} 
+      />
+      <Stack.Screen
+        name='LiveStream' 
+        component={LiveStreamScreen}
+        options={{
+          headerTransparent: true,
+          headerTintColor: '#fff',
+        }}
       />
     </Stack.Navigator>
   );

@@ -118,6 +118,7 @@ function HistoryParkingScreen ({ navigation }) {
                             license_number={item.license_number}
                             first_name={item.first_name}
                             last_name={item.last_name}
+                            parking={item.parking}
                         /> 
                     )}
                     showsVerticalScrollIndicator={false}
