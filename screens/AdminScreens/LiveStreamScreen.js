@@ -11,31 +11,51 @@ const LiveStreamScreen = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const windowWidth = Dimensions.get("window").width;
 
+  let socket = null;  // שימוש במשתנה רגיל ולא ב־useRef עבור ה־WebSocket
+
   useEffect(() => {
-    let socket;
-
     const connectWebSocket = () => {
-      socket = new WebSocket(`wss://${SERVER_NGROK_URL.replace("https://", "")}/ws/video/`);
-
-      socket.onopen = () => { setIsConnected(true) }
+      socket = new WebSocket('ws://192.168.1.5:8000/ws/video/');
+      
+      socket.onopen = () => { 
+        console.log("WebSocket connected.");
+        setIsConnected(true);
+      };
 
       socket.onmessage = (event) => {
-        const uri = "data:image/jpeg;base64," + event.data
-        setImageUri(uri);
-      }
+        try {
+          const data = JSON.parse(event.data); 
+          if (data.frame) {
+            const uri = "data:image/jpeg;base64," + data.frame;
+            setImageUri(uri);
+          }
+        } catch (e) {
+          console.log("Error parsing frame:", e);
+        }
+      };
+      
 
-      socket.onerror = (error) => { setIsConnected(false); }
-      socket.onclose = () => { setIsConnected(false); }
-    }
+      socket.onerror = (error) => { 
+        console.log("WebSocket error:", error);
+        setIsConnected(false);
+      };
+
+      socket.onclose = () => { 
+        console.log("WebSocket disconnected.");
+        setIsConnected(false);
+      };
+    };
 
     connectWebSocket();
 
     return () => {
+      // סגירת ה־WebSocket כשתצא מהקומפוננטה
       if (socket) {
-        socket.close()
+        socket.close();
+        console.log("[INFO] WebSocket connection closed.");
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen)

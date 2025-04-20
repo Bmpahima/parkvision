@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useCallback } from "react";
 import { Text, View, FlatList, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, StatusBar } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Ionicons, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"; 
+import { Ionicons, FontAwesome5, MaterialCommunityIcons, Octicons } from "@expo/vector-icons"; 
 
 
 import ParkingSpot from "../../components/ParkingSpot";
@@ -67,7 +67,10 @@ function ParkingLotManage({ route, navigation }) {
                         <FontAwesome5 name="parking" size={24} color={COLORS.primary700} />
                     <Text style={styles.titleText}>{parkingLotDetail.name}</Text>
                     </View >
-                    <View>
+                    <View style={styles.extraOptionsContainer}>
+                        <TouchableOpacity onPress={() => {}} style={{marginBottom: 10}}>
+                            <Octicons name="graph" size={25} color={COLORS.primary800} />
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('LiveStream')} style={{marginBottom: 10}}>
                             <MaterialCommunityIcons name="video-wireless-outline" size={25} color={COLORS.primary800} />
                         </TouchableOpacity>
@@ -170,6 +173,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
+    },
+    extraOptionsContainer: {
+        flexDirection: 'row',
+        gap: 18
     },
     liveStream: {
         justifyContent: 'center',
