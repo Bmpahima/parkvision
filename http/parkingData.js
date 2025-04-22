@@ -130,12 +130,13 @@ export async function getUserHistory (userId) {
 }
 
 // פונקציה שמחזירה לאדמין את הנתונים על החניון שלו בקובץ pdf
-export async function getParkingStats({month, year, parkinglot}) {
+export async function getParkingStats(id, formData) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/stats/`, JSON.stringify({
-            month,
-            year,
-            parkinglot
+            id,
+            month: formData.month,
+            year: formData.year,
+            parkinglot: formData.parkinglot
         }), { headers: { 'Content-Type': 'application/json' }});
 
         const responseData = await response.data;

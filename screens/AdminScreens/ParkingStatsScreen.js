@@ -1,11 +1,15 @@
-import { Text, View, TouchableOpacity, StatusBar, SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
-import { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, StatusBar, SafeAreaView, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { useState, useEffect, useContext } from "react";
 import { Feather } from "@expo/vector-icons"; 
+
 
 import { COLORS } from "../../constants/styles";
 import { getParkingStats } from "../../http/parkingData";
+import { UserContext } from '../../store/UserContext';
+
 
 function ParkingStatsScreen({ navigation, route }) {
+    const userCtx = useContext(UserContext);
     const [formData, setFormData] = useState({
         month: new Date().getMonth() + 1, 
         year: new Date().getFullYear(),
@@ -80,11 +84,12 @@ function ParkingStatsScreen({ navigation, route }) {
         try {
             setLoading(true);
             setError(null);
-            const response = await getParkingStats(formData);
+            const response = await getParkingStats(userCtx.user.id, formData);
             if (response.error) {
                 setError(response.error);
             } else {
                 console.log(response);
+                Alert.alert("ParkVision", "Parking statistics have been sent to your email.");
             }
         } catch (err) {
             setError("Failed to fetch parking stats.");
