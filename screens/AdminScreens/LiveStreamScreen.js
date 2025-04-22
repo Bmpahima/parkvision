@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Image, StyleSheet, Text, Dimensions, ActivityIndicator, TouchableOpacity, SafeAreaView } from "react-native";
-import { SERVER_NGROK_URL } from "@env";
+import {  LIVE_STREAM_URL } from "@env";
 
 import { COLORS } from "../../constants/styles"
 import { LinearGradient } from "expo-linear-gradient";
@@ -11,11 +11,11 @@ const LiveStreamScreen = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const windowWidth = Dimensions.get("window").width;
 
-  let socket = null;  // שימוש במשתנה רגיל ולא ב־useRef עבור ה־WebSocket
+  let socket = null;  
 
   useEffect(() => {
     const connectWebSocket = () => {
-      socket = new WebSocket('ws://192.168.1.5:8000/ws/video/');
+      socket = new WebSocket(LIVE_STREAM_URL);
       
       socket.onopen = () => { 
         console.log("WebSocket connected.");
@@ -56,6 +56,7 @@ const LiveStreamScreen = () => {
       }
     };
   }, []);
+
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen)

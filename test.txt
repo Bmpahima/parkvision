@@ -180,3 +180,93 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
       },
 });
+
+
+
+----------------------------------- ben-live-test: ----------------------------------------------
+
+useEffect(() => {
+    let socket;
+
+    const connectWebSocket = () => {
+        socket = new WebSocket(`wss://${SERVER_NGROK_URL.replace("https://", "")}/ws/video/`);
+
+        socket.onopen = () => {
+            console.log("✅ WebSocket connected");
+            setIsConnected(true);
+        };
+
+        socket.onclose = (event) => {
+            console.log("🔌 WebSocket closed", event);
+            setIsConnected(false);
+        };
+
+        socket.onerror = (error) => {
+            console.log("❌ WebSocket error:", error.message);
+            setIsConnected(false);
+        };
+
+        socket.onmessage = (event) => {
+            const uri = "data:image/jpeg;base64," + event.data;
+            setImageUri(uri);
+        };
+    };
+
+    connectWebSocket();
+
+    return () => {
+        if (socket) {
+            socket.close();
+        }
+    };
+}, []);
+
+
+
+
+----------------------------------- raspberry pi : -----------------------------------------
+useEffect(() => {
+    const connectWebSocket = () => {
+      socket = new WebSocket('ws://192.168.1.5:8000/ws/video/');
+      
+      socket.onopen = () => { 
+        console.log("WebSocket connected.");
+        setIsConnected(true);
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data); 
+          if (data.frame) {
+            const uri = "data:image/jpeg;base64," + data.frame;
+            setImageUri(uri);
+          }
+        } catch (e) {
+          console.log("Error parsing frame:", e);
+        }
+      };
+      
+
+      socket.onerror = (error) => { 
+        console.log("WebSocket error:", error);
+        setIsConnected(false);
+      };
+
+      socket.onclose = () => { 
+        console.log("WebSocket disconnected.");
+        setIsConnected(false);
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      // סגירת ה־WebSocket כשתצא מהקומפוננטה
+      if (socket) {
+        socket.close();
+        console.log("[INFO] WebSocket connection closed.");
+      }
+    };
+  }, []);
+
+
