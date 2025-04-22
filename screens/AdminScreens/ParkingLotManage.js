@@ -68,7 +68,7 @@ function ParkingLotManage({ route, navigation }) {
                     <Text style={styles.titleText}>{parkingLotDetail.name}</Text>
                     </View >
                     <View style={styles.extraOptionsContainer}>
-                        <TouchableOpacity onPress={() => {}} style={{marginBottom: 10}}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('ParkingStats', {parkinglot: parkingLotDetail.id}) }} style={{marginBottom: 10}}>
                             <Octicons name="graph" size={25} color={COLORS.primary800} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('LiveStream')} style={{marginBottom: 10}}>

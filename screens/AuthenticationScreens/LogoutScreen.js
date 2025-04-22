@@ -8,28 +8,34 @@ function LogoutScreen({ navigation, route }) {
     const userCtx = useContext(UserContext);
 
     useEffect(() => {
-        const userId = userCtx.user.id
-
-        async function userLogout () {
+        const userId = userCtx.user?.id;
+    
+        async function handleLogout() {
+            
+            if (userCtx.isParked) {
+                Alert.alert("Can't log out because you are currently parking.");
+                navigation.goBack();
+                return;
+            }
+    
             try {
                 if (!(route?.params?.deleted)) {
-                    const response = await logout(userId);
-                    console.log(response);
+                    await logout(userId);
+                    console.log("User logged out from backend");
                 }
+            } catch (error) {
+                console.log("Logout error:", error);
             }
-            catch (error) {
-                console.log(error);
-            }
+    
             userCtx.logOut();
         }
-
-        if (userCtx.isParked) {
-            Alert.alert("Can't log out because you are save / parking.");
-            navigation.navigate('home')
-        } else {
-            userLogout();
+    
+       
+        if (userId) {
+            handleLogout();
         }
-    }, [userCtx]);
+    }, []);
+    
 
     return null; 
 }

@@ -28,6 +28,7 @@ import HistoryParkingScreen from './screens/AppScreens/HistoryParkingScreen';
 import ForgotPasswordScreen from './screens/AuthenticationScreens/ForgotPasswordScreen';
 import UserDetailSettingScreen from './screens/AppScreens/UserDetailSettingScreen';
 import LiveStreamScreen from './screens/AdminScreens/LiveStreamScreen';
+import ParkingStatsScreen from './screens/AdminScreens/ParkingStatsScreen';
 
 
 
@@ -143,6 +144,10 @@ const AdminStack = () => {
           headerTransparent: true,
           headerTintColor: '#fff',
         }}
+      />
+      <Stack.Screen 
+        name='ParkingStats'
+        component={ParkingStatsScreen}
       />
     </Stack.Navigator>
   );

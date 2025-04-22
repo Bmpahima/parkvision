@@ -129,3 +129,20 @@ export async function getUserHistory (userId) {
     }
 }
 
+// פונקציה שמחזירה לאדמין את הנתונים על החניון שלו בקובץ pdf
+export async function getParkingStats({month, year, parkinglot}) {
+    try {
+        const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/stats/`, JSON.stringify({
+            month,
+            year,
+            parkinglot
+        }), { headers: { 'Content-Type': 'application/json' }});
+
+        const responseData = await response.data;
+        return responseData;
+    }
+    catch (error) {
+        return {error: "Could'nt fetch parking lot stats."}; 
+    }
+}
+
