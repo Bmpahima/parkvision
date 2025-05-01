@@ -108,7 +108,7 @@ export async function fetchParkingLotUsers (parkingLotId) {
 export async function getParkingLotHistory (parkingLotId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/auth/admin/history/${parkingLotId}/`);
-        console.log(response.data);
+
         return response.data;
 
     } catch (error) {
@@ -119,9 +119,8 @@ export async function getParkingLotHistory (parkingLotId) {
 // פונקציה שמחזירה את ההיסטוריה של משתמש מסוים - עבור יוזר רגיל מתוך ההגדרות
 export async function getUserHistory (userId) {
     try {
-        console.log(userId)
         const response = await axios.get(`${SERVER_NGROK_URL}/auth/history/${userId}/`);
-        console.log(response.data);
+        
         return response.data;
 
     } catch (error) {

@@ -77,7 +77,6 @@ function ParkingStatsScreen({ navigation, route }) {
                 setSelectedOption(mode);
                 break;
         }
-        console.log(formData);
     };
 
     const onSendPress = async () => {
@@ -88,7 +87,6 @@ function ParkingStatsScreen({ navigation, route }) {
             if (response.error) {
                 setError(response.error);
             } else {
-                console.log(response);
                 Alert.alert("ParkVision", "Parking statistics have been sent to your email.");
             }
         } catch (err) {
@@ -149,7 +147,7 @@ function ParkingStatsScreen({ navigation, route }) {
                 <Text style={styles.sendText}>Send PDF to Mail</Text>
             </TouchableOpacity>
 
-            {loading && <ActivityIndicator size="small" color={COLORS.primary500} />}
+            {loading && <ActivityIndicator size="small" color={COLORS.primary500} style={{marginTop: 20}} />}
             {error && <Text style={styles.errorText}>{error}</Text>}
                 
             </View>
