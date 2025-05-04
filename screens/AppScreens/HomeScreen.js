@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Alert } from "react-native";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
+import { STOP_TIMER_URL } from "@env";
+
 
 import Button from "../../components/Button";
 import { COLORS } from "../../constants/styles";
@@ -25,7 +27,52 @@ function HomeScreen({ navigation, route }) {
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
   const hasExpiredRef = useRef(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isLate, setIsLate] = useState(false);
 
+  let socket = null;
+
+  useEffect(() => {
+    const connectWebSocket = () => {
+      socket = new WebSocket(STOP_TIMER_URL + `${userCtx.user.id}/`);
+      
+      socket.onopen = () => { 
+        console.log("WebSocket connected.");
+        setIsConnected(true);
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data); 
+          if (data.success) {
+            forceStopTimer();
+          }
+        } catch (e) {
+          console.log("Error in stoping the timer.", e);
+        }
+      };
+      
+      socket.onerror = (error) => { 
+        console.log("WebSocket error:", error);
+        setIsConnected(false);
+      };
+
+      socket.onclose = () => { 
+        console.log("WebSocket disconnected.");
+        setIsConnected(false);
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      // סגירת ה־WebSocket כשתצא מהקומפוננטה
+      if (socket) {
+        socket.close();
+        console.log("[INFO] WebSocket connection closed.");
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!isFocused && !timerRunning) {
@@ -149,6 +196,23 @@ function HomeScreen({ navigation, route }) {
       }
     }
   };
+
+  const forceStopTimer = () => {
+    try {
+      if (timerRunning) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+        setTimerRunning(false);
+        userCtx.stopParking();
+        Alert.alert("Your'e Late", "Parking session has stopped because you were late.");
+      }
+    }
+    catch (error) {
+      console.log("Error stopping parking:", error);
+      Alert.alert("Error", "Could not stop parking session.");
+    }
+    
+  }
 
   // Update Timer Display
   const clockDisplay = () => {

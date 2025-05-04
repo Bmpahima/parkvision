@@ -32,8 +32,8 @@ function ParkingStatsScreen({ navigation, route }) {
 
         setFormattedDates({
             now: `${getMonthName(today.month)}, ${today.year}`,
-            last: `${getMonthName(lastMonth.month)}, ${lastMonth.year}`,
-            twolast: `${getMonthName(last2Month.month)}, ${last2Month.year}`,
+            last: `0${today.startDay}-${today.endDay} ${getMonthName(lastMonth.month)}, ${lastMonth.year}`,
+            twolast: `0${today.startDay}-${today.endDay} ${getMonthName(last2Month.month)}, ${last2Month.year}`,
             all: `All Months, ${today.year}`
         });
     }, [])
@@ -41,9 +41,14 @@ function ParkingStatsScreen({ navigation, route }) {
     const getMonthYearOffset = (offset = 0) => {
         const date = new Date();
         date.setMonth(date.getMonth() - offset);
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
         return {
-            month: date.getMonth() + 1,
-            year: date.getFullYear(),
+            month,
+            year,
+            startDay: new Date(year, month, 1).getDate(),
+            endDay: new Date(year, month + 1, 0).getDate()
         };
     };
 
