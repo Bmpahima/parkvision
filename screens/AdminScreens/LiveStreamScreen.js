@@ -24,7 +24,7 @@ const LiveStreamScreen = () => {
 
       socket.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data); 
+          const data = JSON.parse(event.data);           
           if (data.frame) {
             const uri = "data:image/jpeg;base64," + data.frame;
             setImageUri(uri);
