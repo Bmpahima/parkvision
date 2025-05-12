@@ -27,52 +27,7 @@ function HomeScreen({ navigation, route }) {
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
   const hasExpiredRef = useRef(false);
-  const [isConnected, setIsConnected] = useState(false);
-
-  const socketRef = useRef(null);
-
-  useEffect(() => {
-      const connectWebSocket = () => {
-          socketRef.current = new WebSocket(`${STOP_TIMER_URL}${userCtx.user.id}/`);
-          
-          socketRef.current.onopen = () => { 
-              console.log("WebSocket connected.");
-              setIsConnected(true);
-          };
-
-          socketRef.current.onmessage = (event) => {
-              try {
-                  const data = JSON.parse(event.data); 
-                  if (data.success) {
-                      forceStopTimer();
-                  }
-              } catch (e) {
-                  console.log("Error in stopping the timer.", e);
-              }
-          };
-          
-          socketRef.current.onerror = (error) => { 
-              console.log("WebSocket error:", error);
-              setIsConnected(false);
-          };
-
-          socketRef.current.onclose = () => { 
-              console.log("WebSocket disconnected.");
-              setIsConnected(false);
-          };
-      };
-
-      connectWebSocket();
-
-      return () => {
-          if (socketRef.current) {
-              socketRef.current.close();
-              console.log("[INFO] WebSocket connection closed.");
-          }
-      };
-  }, []);
-
-
+  
   useEffect(() => {
     if (!isFocused && !timerRunning) {
       setTimeValue(defaultTimerDisplay);
@@ -195,29 +150,6 @@ function HomeScreen({ navigation, route }) {
       }
     }
   };
-
-  const forceStopTimer = () => {
-    try {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-        setTimerRunning(false);
-        userCtx.stopParking();
-        Alert.alert("Your'e Late", "Parking session has stopped because you were late.", [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.navigate('ParkingLotHome');
-            }
-          }
-        ]);
-      
-    }
-    catch (error) {
-      console.log("Error stopping parking:", error);
-      Alert.alert("Error", "Could not stop parking session.");
-    }
-    
-  }
 
   // Update Timer Display
   const clockDisplay = () => {
