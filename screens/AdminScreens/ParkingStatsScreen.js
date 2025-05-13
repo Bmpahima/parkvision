@@ -91,7 +91,10 @@ function ParkingStatsScreen({ navigation, route }) {
             const response = await getParkingStats(userCtx.user.id, formData);
             if (response.error) {
                 setError(response.error);
-            } else {
+            } else if (response?.noData) {
+                setError("No data available for the given parking lot.");
+            }
+            else {
                 Alert.alert("ParkVision", "Parking statistics have been sent to your email.");
             }
         } catch (err) {
