@@ -76,7 +76,7 @@ function ParkingUserManager({ route, navigation }) {
                                 <Text style={styles.label}>Color</Text>
                                 <View style={styles.colorContainer}>
                                     <View style={[styles.colorSwatch, { backgroundColor: CAR_COLORS[fixReversedHebrew(user.car_color)] || '#FFFFFF'} ]}></View>
-                                    <Text style={styles.valueVehicle}>{fixReversedHebrew(user.car_color)}</Text>
+                                    <Text style={styles.valueVehicle}>{user.car_color}</Text>
                                 </View>
                             </View>
                         </View>
