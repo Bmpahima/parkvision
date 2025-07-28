@@ -38,6 +38,10 @@ function BookSpotScreen({ navigation, route }) {
       estimated.hours += 1;
     }
 
+    if (estimated.hours >= 24) {
+      estimated.hours = estimated.hours % 24;
+    }
+
     const formattedTime = `${estimated.hours < 10 ? "0" + estimated.hours : estimated.hours}:${estimated.minutes < 10 ? "0" + estimated.minutes : estimated.minutes}`;
 
     Alert.alert(
