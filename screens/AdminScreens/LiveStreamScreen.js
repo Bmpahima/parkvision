@@ -49,10 +49,9 @@ const LiveStreamScreen = () => {
     connectWebSocket();
 
     return () => {
-      // סגירת ה־WebSocket כשתצא מהקומפוננטה
       if (socket) {
         socket.close();
-        console.log("[INFO] WebSocket connection closed.");
+        console.log("WebSocket connection closed.");
       }
     };
   }, []);
