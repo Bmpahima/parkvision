@@ -82,7 +82,7 @@ function HistoryParkingScreen ({ navigation }) {
                 <ScrollView 
                     horizontal 
                     showsHorizontalScrollIndicator={false} 
-                    contentContainerStyle={styles.optionsContent}    
+                    contentContainerStyle={styles.optionsContent} 
                 >
                     <TouchableOpacity style={[styles.option, selectedFilterOption === 'All' && styles.selectedOption]} onPress={() => { onOptionPress() }}>
                         <Text style={[styles.optionText, selectedFilterOption === 'All' && styles.selectedOptionText]}>All</Text>
