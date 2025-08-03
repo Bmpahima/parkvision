@@ -1,32 +1,28 @@
-# 📱 ParkVision Frontend – React Native App
+# 📱 ParkVision Frontend – Smart Parking Mobile App
 
-> Cross-platform mobile application for the ParkVision smart parking system.
-
----
-
-## 🧠 Overview
-
-The **ParkVision** frontend is built using **React Native** and serves as the user interface for the smart parking system.  
-It enables users to:
-
-- Register / log in to the system  
-- View parking lots and availability  
-- Book a parking spot  
-- View live status and history  
-- Admins can view live stream and parking statistics
+> Cross-platform app built with React Native to enhance the user experience in parking lot management.
 
 ---
 
-## 🎨 Features
+## 🌟 Overview
 
-- 📲 Mobile UI built with **React Native** and **Expo**
-- 🧭 **React Navigation** for stack/drawer navigation
-- 🔐 **Authentication flows** with validations
-- 🧠 **Context API** for global state (user/auth/parking)
-- 📷 Live **video stream** via WebSocket for admins
-- 📊 Real-time **parking history & usage stats**
-- 🛠️ Admin dashboard (in-app) for managing lots/users
-- 🔒 Forgot password + reset flows
+The ParkVision frontend is a mobile application developed using React Native, designed to complement the backend system and provide seamless user interaction.
+It supports real-time parking monitoring, user authentication, smart reservations, and admin control panels with live streaming and analytics.
+
+This app connects directly to the Django backend via REST APIs and WebSocket for real-time updates and secure access.
+
+---
+
+## 📲 Features
+
+- 🔐 **User authentication** (signup, login, forgot password)
+- 🚘 **Real-time parking spot tracking** and booking interface
+- ⏳ **Parking timer** for active parking sessions
+- 🛑 **Unauthorized vehicle detection alerts**
+- 🧾 **Parking history & stats** for both users and admins
+- 🎥 **Live video stream access** for admins via WebSocket
+- ⚙️ **User and car details management**
+- 🧠 **Context API** for persistent auth and session state
 
 ---
 
@@ -35,134 +31,98 @@ It enables users to:
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
 - [React Navigation](https://reactnavigation.org/)
+- [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
 - [Context API](https://reactjs.org/docs/context.html)
-- [Reanimated](https://docs.swmansion.com/react-native-reanimated/)
-- [Axios](https://axios-http.com/)
-- [Socket.io-client](https://socket.io/)
-- [Styled Components / StyleSheet API]
+- [Socket.IO Client](https://socket.io/)
+- [Django REST API](https://www.django-rest-framework.org/) (backend integration)
 
 ---
 
-## 📁 Project Structure
+## 🧱 Project Structure
 
 ```
-ParkVision-frontend/
-├── components/            # Shared components (e.g., LoginForm, SignupForm, Buttons)
-├── constants/             # Global styles, colors
-├── http/                  # API communication (login/logout requests)
-├── screens/              
-│   ├── AuthenticationScreens/   # Login, Signup, Welcome, ForgotPassword
-│   ├── AppScreens/              # Home, ParkingLots, Booking, Settings
-│   └── AdminScreens/           # Admin pages (Stream, Manage Users)
-├── store/                 # Context (UserContext)
-├── utils/                 # Validators (email, password, phone, etc.)
-├── App.js                 # Entry point and navigation root
+📁 src/
+├── 📁 screens/                # Screen components (Login, Signup, Home, Admin, etc.)
+├── 📁 store/                  # Context API (UserContext.js)
+├── 📁 constants/              # Styling constants (colors, spacing, etc.)
+├── 📁 images/                 # App images
+├── 📁 utils/                  # Form validation functions
+├── App.js                    # Root component with Navigation logic
+├── navigation/               # Stack and Drawer navigators
 ```
 
 ---
 
-## 🧪 Validation & Forms
+## 🚀 Key Components
 
-All forms (Login, Signup) are validated using custom validator functions:
+### 🧭 `App.js`
+Entry point of the app. Handles the context provider and root navigation (switch between auth stack and drawer).
 
-- ✅ `emailValidator(email)`
-- ✅ `passwordValidator(password)`
-- ✅ `nameValidator(name)`
-- ✅ `phoneValidator(phone)`
-- ✅ `lisenceValidator(lisenceNumber)`
-- 🧾 Aggregated `signUpValidation(formData)` and `loginValidation(formData)`
+### 📱 Authentication Screens
+- `WelcomeScreen`, `LoginScreen`, `SignUpScreen`, `ForgotPasswordScreen`
+- Includes Reanimated transitions, validations, and navigation hooks
 
-Each returns:
-```js
-{ valid: true|false, error: "...", success: "..." }
+### 📦 `UserContext.js`
+Stores and manages user session:
+- `logIn`, `logOut`, `startParking`, `stopParking`
+- Auth state, parking state, admin check
+
+### 📂 `utils/validation.js`
+Contains:
+- `emailValidator`, `passwordValidator`, `nameValidator`, etc.
+- Functions used for login/signup form validation
+
+---
+
+## 🧪 How to Run
+
+### 📦 Prerequisites
+- Node.js & npm
+- Expo CLI (`npm install -g expo-cli`)
+- Expo Go mobile app (download from Play Store or App Store)
+- Android Studio / iOS Simulator / Physical Device
+
+### ⚙️ Installation
+```bash
+npm install
+npm start
 ```
+Scan the QR code with your Expo Go app or run on emulator.
 
 ---
 
-## 📦 Global State (Context API)
+## 🛡️ Roles
 
-The app uses `UserContext` to manage:
-
-- `user` object (ID, email, name, car info)
-- Authentication state (`isAuthenticated`)
-- Admin status (`isAdmin`)
-- Parking state (`isParked`, `parkingId`)
-- Login / logout / start parking / stop parking
+- 👤 Regular Users:
+  - Sign in, view nearby lots, reserve a spot, view parking history
+- 👮 Admin Users:
+  - View live stream, manage lots and spots, view usage statistics, receive alerts
 
 ---
 
-## 🚀 Navigation Flow
+## 📌 Future Improvements
 
-- `UserLoginScreen` → Login / Signup / Forgot Password
-- `HomeAppScreen` → Drawer:
-  - Find Parking (Stack)
-  - Home (Timer)
-  - Settings (History, Profile)
-  - Admin Dashboard (for `isAdmin`)
-  - Logout
-
----
-
-## 🖥️ Screens
-
-### Authentication
-- `WelcomeScreen` – Welcome animation & routing
-- `LoginScreen` – Login form + validation
-- `SignUpScreen` – Registration
-- `ForgotPasswordScreen` – Password reset
-
-### App
-- `ParkingLotScreen` – List of lots
-- `ParkingLotDetailScreen` – View details & availability
-- `BookSpotScreen` – Reserve a parking spot
-- `HomeScreen` – Timer + current parking
-- `SettingsScreen` – Navigate to history/profile
-- `HistoryParkingScreen` – User's parking history
-- `UserDetailSettingScreen` – View/edit profile
-
-### Admin
-- `ParkingManage` – Entry page for admin
-- `ParkingLotManage` – CRUD for parking lots
-- `ParkingUserManager` – View/manage users
-- `AdminHistoryScreen` – Global parking history
-- `LiveStreamScreen` – WebSocket live feed
-- `ParkingStatsScreen` – Visual stats
-
----
-
-## 📲 Usage
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Start Expo:
-   ```bash
-   npx expo start
-   ```
-
-3. Scan QR code from your phone (with Expo Go)  
-   Make sure your Django server is running at the configured IP (e.g., `http://<your-ip>:8000`)
-
----
-
-## ✅ Future Enhancements
-
-- Push notifications for spot availability  
-- OTP verification during signup  
-- Advanced filtering for lots by location/price/type  
-- Dark mode theme
+- 🔄 Background push notifications
+- 📍 Geofencing-based spot suggestions
+- 🧾 Email invoice generation on logout
+- 🧑‍🤝‍🧑 Multi-role session switching (Admin/User)
 
 ---
 
 ## 📄 License
-
-This project is part of the ParkVision system. For full licensing, see the main repository.
+MIT License – see [LICENSE](../LICENSE) file.
 
 ---
 
-## 🤝 Credits
+## 🧠 Contributors
+Thanks to all developers and testers involved in the ParkVision mobile experience.
 
-Made with 💙 using React Native, Expo, and Context API.  
-Inspired by the need to **make parking smarter** for everyone.
+---
+
+## 📊 Tech Stack
+
+![React Native](https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Expo](https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37)
+![Context-API](https://img.shields.io/badge/Context--Api-000000?style=for-the-badge&logo=react)
+![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
+![React Navigation](https://img.shields.io/badge/React_Navigation-20232a?style=for-the-badge&logo=react&logoColor=61DAFB)
