@@ -2,7 +2,20 @@ import { Text, TextInput, View, StyleSheet } from "react-native";
 import { COLORS } from "../constants/styles";
 
 
-// רכיב לקלט של הטפסים של הכניסה והרשמה של משתמשים עם אופציות לשינוי המקלדת והסתרת התויים 
+/**
+ * Reusable input field component for forms, such as login and signup.
+ *
+ * @param {Object} props
+ * @param {string} props.placeholder - Placeholder text shown inside the input
+ * @param {string} [props.keyType="default"] - Keyboard type for the input (e.g., "email-address", "numeric")
+ * @param {boolean} [props.secureInput=false] - Whether to hide input characters (e.g., for passwords)
+ * @param {Function} props.onChangeHandler - Callback called on input text change: (text, name) => void
+ * @param {string} props.name - Name identifier for the input field (used in onChangeHandler)
+ * @param {string} [props.errorMessage] - Optional error message to display below the input
+ * @param {string} props.value - Current value of the input
+ * @returns {JSX.Element}
+ */
+
 
 function Input({ placeholder, keyType = "default", secureInput = false, onChangeHandler, name, errorMessage, value }) {
     return (

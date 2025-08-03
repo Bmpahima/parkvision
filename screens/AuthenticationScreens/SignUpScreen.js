@@ -3,6 +3,20 @@ import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, StatusBar, Pla
 import { COLORS } from "../../constants/styles";
 import SignupForm from "../../components/SignupForm";
 
+/**
+ * @component SignUpScreen
+ * 
+ * A screen that allows new users to create an account.
+ * It includes a logo, a title, and the `SignupForm` component.
+ * 
+ * The screen uses:
+ * - `SafeAreaView` for iOS safe area handling.
+ * - `KeyboardAvoidingView` to prevent the keyboard from overlapping the form.
+ * - `ScrollView` to support vertical scrolling on smaller screens.
+ * 
+ * @returns {JSX.Element} The rendered sign-up screen.
+ */
+
 function SignUpScreen () {
     
     return (

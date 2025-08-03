@@ -8,12 +8,36 @@ import HistoryItem from '../../components/HistoryItem';
 import { getUserHistory } from '../../http/parkingData';
 import { UserContext } from '../../store/UserContext';
 
+/**
+ * HistoryParkingScreen
+ *
+ * Displays the parking history of the current user.
+ * Supports filtering history by date ranges: Today, This Week, This Month, or All.
+ * Fetches data when screen is focused.
+ *
+ * @component
+ * @param {object} props
+ * @param {object} props.navigation - React Navigation object for screen transitions.
+ */
+
 function HistoryParkingScreen ({ navigation }) {
+    /**
+     * Selected filter option for parking history.
+     * Possible values: 'All' | 'Today' | 'This Week' | 'This Month'
+     *
+     * @type {string}
+     */
     const [selectedFilterOption, setSelectedFilterOption] = useState('All');
+    
     const userCtx = useContext(UserContext);
     const [parkingLotHistory, setParkingLotHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    /**
+    * Fetches parking history from the server for the current user.
+    * This function is executed every time the screen comes into focus.
+    */
 
     useFocusEffect(
             useCallback(() => {
@@ -36,9 +60,21 @@ function HistoryParkingScreen ({ navigation }) {
             }, [userCtx.user.id])
         );
 
+    /**
+     * Sets the selected filter option (e.g., 'Today', 'This Week').
+     *
+     * @param {string} optionName - Name of the selected option.
+     */
+
     const onOptionPress = (optionName = 'All') => {
         setSelectedFilterOption(prevOption => optionName);
     };
+
+    /**
+     * Filters the parking history based on the selected date filter.
+     *
+     * @returns {Array<Object>} Filtered history data.
+     */
 
     const historyFilter = useCallback(() => {
         const today = new Date();

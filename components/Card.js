@@ -10,7 +10,17 @@ const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 160;
 const CARD_WIDTH = width * 0.8;
 
-// הכרטיסים שבתחתית המפה
+/**
+ * Card component representing a parking lot with basic information,
+ * navigation shortcut, and details button.
+ *
+ * @param {Object} props
+ * @param {Object} props.parkingLot - The parking lot data (includes name, address, latitude, longitude)
+ * @param {Function} props.onCardPress - Callback when the card or "Details" is pressed
+ * @param {number} [props.distance] - Optional distance from user to the parking lot, in kilometers
+ * @returns {JSX.Element}
+ */
+
 function Card ({ parkingLot, onCardPress, distance }) {
 
     const wazeNavigator = useCallback(() => {

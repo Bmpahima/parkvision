@@ -16,6 +16,22 @@ const DUMMY = {
     last_name: "Cohen"
 };
 
+/**
+ * Component representing a single history item showing
+ * parking session details for a specific user.
+ *
+ * @param {Object} props
+ * @param {string} [props.parking_lot="Central Parking Lot"] - Name of the parking lot
+ * @param {string} [props.start_time="08:30"] - Start time of the parking session
+ * @param {string} [props.end_time="10:15"] - End time of the parking session
+ * @param {string} [props.start_date="2024-03-02"] - Date the session started
+ * @param {string} [props.end_date="2024-03-02"] - Date the session ended
+ * @param {string} [props.license_number="123-456-789"] - License plate number of the vehicle
+ * @param {string} [props.first_name="David"] - First name of the driver
+ * @param {string} [props.last_name="Cohen"] - Last name of the driver
+ * @param {string} [props.parking] - Optional specific parking space within the lot
+ * @returns {JSX.Element}
+ */
 
 function HistoryItem ({ parking_lot="Central Parking Lot",
                         start_time="08:30",

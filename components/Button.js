@@ -2,7 +2,22 @@ import { Text, Pressable, StyleSheet } from "react-native";
 
 import { COLORS } from "../constants/styles";
 
-// רכיב של כפתור
+/**
+ * Custom reusable button component for React Native apps.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Text or elements to display inside the button
+ * @param {Function} props.onPress - Callback function to handle button press
+ * @param {Object} [props.buttonStyle] - Optional custom styles for the button container
+ * @param {Object} [props.labelStyle] - Optional custom styles for the button label text
+ *
+ * @example
+ * <Button onPress={() => console.log('Pressed!')}>
+ *   Click Me
+ * </Button>
+ */
+
 function Button({ children, onPress, buttonStyle, labelStyle }) {
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [styles.buttonContainer, pressed && styles.isPressed, buttonStyle]}>

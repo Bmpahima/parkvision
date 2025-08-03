@@ -7,6 +7,15 @@ import { COLORS } from '../../constants/styles';
 import HistoryItem from '../../components/HistoryItem';
 import { getParkingLotHistory } from '../../http/parkingData';
 
+/**
+ * AdminHistoryScreen displays the history of vehicles parked in a specific parking lot,
+ * with filter options (All, Today, This Week, This Month).
+ *
+ * @param {Object} props
+ * @param {Object} props.route - Route object containing parking lot details
+ * @param {Object} props.navigation - React Navigation object for screen transitions
+ * @returns {JSX.Element}
+ */
 
 function AdminHistoryScreen ({ navigation, route }) {
 
@@ -36,11 +45,22 @@ function AdminHistoryScreen ({ navigation, route }) {
                 getParkingData();
             }, [parkingLotDetail.id])
         );
+    
+    /**
+     * Updates selected filter option (All, Today, This Week, This Month).
+     * @param {string} optionName
+     */
 
     const onOptionPress = (optionName = 'All') => {
         setSelectedFilterOption(prevOption => optionName);
     };
 
+     /**
+     * Filters the parking lot history based on the selected filter.
+     *
+     * @returns {Array<Object>} Filtered list of history records
+     */
+    
     const historyFilter = useCallback(() => {
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];

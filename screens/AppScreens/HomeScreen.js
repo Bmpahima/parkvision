@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Alert } from "react-native";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
-import { STOP_TIMER_URL } from "@env";
-
 
 import Button from "../../components/Button";
 import { COLORS } from "../../constants/styles";
@@ -10,14 +8,25 @@ import CarTimerCircle from "../../components/CarTimerCircle";
 import { bookParking, unBookParking } from "../../http/parkingData";
 import { UserContext } from "../../store/UserContext";
 
+
 const defaultTimerDisplay = {
   hours: "00",
   minutes: "00",
   seconds: "00",
 };
 
+/**
+ * HomeScreen
+ *
+ * This is the main screen shown to the user when they are actively parked or reserving a parking spot.
+ * It manages a live timer, handles reservation expiration, and allows the user to start or stop a parking session.
+ *
+ * @component
+ * @param {object} props
+ * @param {object} props.navigation - React Navigation object for navigating between screens.
+ * @param {object} props.route - Contains parameters like parkingId and request_time.
+ */
 
-// המסך בו מופיע הטיימר של החנייה.
 function HomeScreen({ navigation, route }) {
   const isFocused = useIsFocused();
   const userCtx = useContext(UserContext);
@@ -28,6 +37,9 @@ function HomeScreen({ navigation, route }) {
   const timerRef = useRef(null);
   const hasExpiredRef = useRef(false);
   
+  /**
+   * Resets the timer when screen is unfocused and timer is not running.
+   */
   useEffect(() => {
     if (!isFocused && !timerRunning) {
       setTimeValue(defaultTimerDisplay);
@@ -35,7 +47,9 @@ function HomeScreen({ navigation, route }) {
     }
   }, [isFocused]);
 
-
+  /**
+   * Redirects user to home screen if no valid parking session is active.
+   */
   useFocusEffect(
     useCallback(() => {
       const isMissingParams =
@@ -77,7 +91,10 @@ function HomeScreen({ navigation, route }) {
     }, [userCtx.isParked, route.params])
   );
 
-  
+  /**
+   * Starts the parking session timer.
+   * Books the parking spot using API, stores reservation deadline, and starts UI timer.
+   */  
   const startTimer = async () => {
     if (!timerRunning && !userCtx.parkingId) {
       try {
@@ -116,7 +133,10 @@ function HomeScreen({ navigation, route }) {
     }
   };
 
-  // Stop Timer and Unbook Parking
+  /**
+   * Stops the parking session.
+   * Cancels the timer and releases the parking spot via API.
+   */
   const stopTimer = async () => {
     if (timerRunning) {
       clearInterval(timerRef.current);
@@ -151,7 +171,10 @@ function HomeScreen({ navigation, route }) {
     }
   };
 
-  // Update Timer Display
+  /**
+   * Updates the timer display every second.
+   * Checks if the reservation time has expired and stops timer if needed.
+   */
   const clockDisplay = () => {
     const now = Date.now();
     const elapsedTime = now - startTimeRef.current;
@@ -166,7 +189,6 @@ function HomeScreen({ navigation, route }) {
       stopTimer();
     }
   
-    // עדכון תצוגת השעון
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
@@ -178,6 +200,9 @@ function HomeScreen({ navigation, route }) {
     });
   };
 
+  /**
+   * Cleans up the timer interval on component unmount.
+   */
 
   useEffect(() => {
     return () => clearInterval(timerRef.current);

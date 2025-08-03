@@ -9,14 +9,34 @@ import { fetchOwnerParkingLots } from "../../http/parkingData";
 import { TouchableOpacity } from "react-native";
 
 
-// זה המסך שבו רואים את רשימת החניונים של אותו admin
+/**
+ * ParkingManage
+ * 
+ * Admin screen to view the list of parking lots owned by the current admin.
+ * Displays a welcome message, fetches the parking data on focus,
+ * and allows navigating into each parking lot to manage it.
+ * 
+ * @component
+ * @param {object} props - Props passed by React Navigation.
+ * @param {object} props.navigation - Navigation object for navigating between screens.
+ */
+
 function ParkingManage({ navigation }) {
   const userCtx = useContext(UserContext);
   const [parkingLots, setParkingLots] = useState([]);  
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null); 
 
-  
+   /**
+   * ParkingItem
+   * 
+   * A single item component that represents a parking lot in the list.
+   * 
+   * @param {object} props
+   * @param {object} props.parkingLot - The parking lot data object.
+   * @param {function} props.onPress - Callback function to invoke on press.
+   */
+
   const ParkingItem = ({ parkingLot, onPress}) => {
     return (
       <TouchableOpacity style={styles.parkingItemContainer} onPress={onPress}>
@@ -38,6 +58,10 @@ function ParkingManage({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+       /**
+       * Fetches the list of parking lots for the current admin.
+       * Updates the `parkingLots` state or sets error on failure.
+       */
       async function getParkingLots() {
         try {
           setLoading(true);

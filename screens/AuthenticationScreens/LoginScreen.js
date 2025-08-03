@@ -3,6 +3,18 @@ import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, StatusBar, Pla
 import LoginForm from "../../components/LoginForm";
 import { COLORS } from "../../constants/styles";
 
+/**
+ * @component LoginScreen
+ *
+ * This screen displays the login page for users to sign into their account.
+ * It includes:
+ * - A logo and introductory text
+ * - The <LoginForm /> component which handles login logic and validation
+ * - Keyboard avoiding behavior for iOS/Android
+ *
+ * @returns {JSX.Element} Rendered Login screen
+ */
+
 function LoginScreen () {
  
     return (

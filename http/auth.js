@@ -1,7 +1,15 @@
 import { SERVER_NGROK_URL } from '@env';
 import axios from 'axios';
 
-// פונקציה שמשמשת לכניסה של המשתמש למערכת
+/**
+ * Logs the user into the system with provided email and password.
+ *
+ * @param {Object} credentials
+ * @param {string} credentials.email - User's email
+ * @param {string} credentials.password - User's password
+ * @returns {Promise<Object>} Response data or error object
+ */
+
 export async function login({ email, password }) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/auth/login/`, JSON.stringify({
@@ -22,7 +30,13 @@ export async function login({ email, password }) {
     }
 }
 
-// פונקציה שמשמשת ליציאה של המשתמש מהמערכת
+/**
+ * Logs the user out of the system by user ID.
+ *
+ * @param {string|number} id - User's unique identifier
+ * @returns {Promise<Object>} Response data or error object
+ */
+
 export async function logout(id) {
     try {
         const response = await axios.post(
@@ -44,7 +58,19 @@ export async function logout(id) {
 }
 
 
-// פונקציה שמשמשת לשמירת פרטי ההרשמה והרשמה של משתמש למערכת
+/**
+ * Registers a new user with the given form data.
+ *
+ * @param {Object} formData - User registration details
+ * @param {string} formData.first_name
+ * @param {string} formData.last_name
+ * @param {string} formData.email
+ * @param {string} formData.password
+ * @param {string} formData.phone_number
+ * @param {string} formData.lisence_plate_number
+ * @returns {Promise<Object>} Response data or error object
+ */
+
 export async function signUp(formData) {
     try {
         const requestData = {
@@ -71,6 +97,13 @@ export async function signUp(formData) {
     }
 }
 
+/**
+ * Sends a password reset code to the user's email.
+ *
+ * @param {string} email - Email address to send the code to
+ * @returns {Promise<Object>} Response data or error object
+ */
+
 export async function forgotPassword(email) {
     try {
         const response = await axios.post(
@@ -90,6 +123,14 @@ export async function forgotPassword(email) {
     }
 }
 
+/**
+ * Resets the user's password using the email and new password.
+ *
+ * @param {string} email - User's email
+ * @param {string} password - New password to set
+ * @returns {Promise<Object>} Response data or error object
+ */
+
 export async function resetPassword(email, password) {
     console.log(password);
     try {
@@ -108,6 +149,13 @@ export async function resetPassword(email, password) {
         };
     }
 }
+
+/**
+ * Deletes the account of a user by ID.
+ *
+ * @param {string|number} userId - User's unique identifier
+ * @returns {Promise<Object>} Response data or error object
+ */
 
 export async function deleteAccount(userId) {
     try {

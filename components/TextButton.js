@@ -1,6 +1,14 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 
-// רכיב של כפתור טקסט פשוט
+/**
+ * TextButton component - a minimal pressable text-based button.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Button label or content
+ * @param {Function} props.onPress - Callback triggered when the button is pressed
+ * @returns {JSX.Element}
+ */
+
 function TextButton({ children, onPress }) {
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [pressed && styles.isPressed]}>

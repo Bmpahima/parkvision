@@ -7,6 +7,18 @@ import { COLORS } from "../../constants/styles";
 import { getParkingStats } from "../../http/parkingData";
 import { UserContext } from '../../store/UserContext';
 
+/**
+ * ParkingStatsScreen
+ * 
+ * Screen for admins to choose a time range and request PDF statistics of parking usage.
+ * Options include: current month, last month, two months ago, or the entire year.
+ * Sends PDF stats to the user's email after selection.
+ * 
+ * @component
+ * @param {object} props
+ * @param {object} props.navigation - Navigation object for screen transitions.
+ * @param {object} props.route - Route object, used to extract `parkinglot` parameter.
+ */
 
 function ParkingStatsScreen({ navigation, route }) {
     const userCtx = useContext(UserContext);
@@ -38,6 +50,16 @@ function ParkingStatsScreen({ navigation, route }) {
         });
     }, [])
 
+    /**
+     * getMonthYearOffset
+     * 
+     * Utility function to calculate the month and year of a previous month by offset.
+     * Also returns the start and end day numbers of that month.
+     * 
+     * @param {number} offset - How many months back to offset (e.g., 0 = current, 1 = last).
+     * @returns {{month: number, year: number, startDay: number, endDay: number}}
+     */
+
     const getMonthYearOffset = (offset = 0) => {
         const date = new Date();
         date.setMonth(date.getMonth() - offset);
@@ -51,6 +73,14 @@ function ParkingStatsScreen({ navigation, route }) {
             endDay: new Date(year, month + 1, 0).getDate()
         };
     };
+
+    /**
+     * setOption
+     * 
+     * Sets the selected option and updates the formData accordingly.
+     * 
+     * @param {'now' | 'last' | '2last' | 'yearly'} mode - The time range option selected by the user.
+     */
 
     const setOption = (mode = 'yearly') => {
         switch (mode) {
@@ -84,6 +114,13 @@ function ParkingStatsScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * onSendPress
+     * 
+     * Handles the action of sending the PDF report to the admin's email.
+     * Shows a loading spinner while sending, and error or success alert upon completion.
+     */
+
     const onSendPress = async () => {
         try {
             setLoading(true);
@@ -103,6 +140,14 @@ function ParkingStatsScreen({ navigation, route }) {
             setLoading(false);
         }
     };
+    /**
+     * getMonthName
+     * 
+     * Utility function to convert a month number (1-12) into a month name string.
+     * 
+     * @param {number} month_number - Number of the month (1-12).
+     * @returns {string} - Full English name of the month.
+     */
 
     const getMonthName = (month_number) => {
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

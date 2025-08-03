@@ -1,7 +1,13 @@
 import { SERVER_NGROK_URL } from '@env';
 import axios from 'axios';
 
-// פונקציה שמחזירה את המידע הדרוש על חניון בהינתן המספר המזהה שלו
+/**
+ * Fetches parking lot data by its ID.
+ *
+ * @param {string|number} id - Parking lot identifier
+ * @returns {Promise<Object>} Parking lot data or error object
+ */
+
 export async function fetchParking(id) { 
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/${id}`);
@@ -13,7 +19,12 @@ export async function fetchParking(id) {
     }
 }
 
-// פונקציה שמחזירה את המידע הדרוש על כל החניונים
+/**
+ * Fetches data for all available parking lots.
+ *
+ * @returns {Promise<Object>} Array of parking lot data or error object
+ */
+
 export async function fetchAllParkingLot () {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/all/`);
@@ -26,7 +37,15 @@ export async function fetchAllParkingLot () {
     }
 }
 
-// פונקציה המשמשת לשמירת חנייה מסוימת בהינתן מספר מזהה, מספר משתמש וזמן לשמירה
+/**
+ * Books a specific parking spot for a user.
+ *
+ * @param {number|string} id - Parking spot ID
+ * @param {number|string} userId - User ID
+ * @param {string} [save_time='immediate'] - Optional time to save the parking
+ * @returns {Promise<Object>} Booking result or error object
+ */
+
 export async function bookParking(id, userId, save_time='immediate') {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/book/`, JSON.stringify({
@@ -43,7 +62,13 @@ export async function bookParking(id, userId, save_time='immediate') {
     }
 }
 
-// פונקציה שרק בודקת בזמן אמת אם חנייה תפוסה או לא
+/**
+ * Checks whether a parking spot is currently occupied.
+ *
+ * @param {number|string} parkingId - Parking spot ID
+ * @returns {Promise<boolean|Object>} True if occupied, false otherwise, or error object
+ */
+
 export async function isOccupied(parkingId) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/occupancy/`, JSON.stringify({
@@ -62,7 +87,14 @@ export async function isOccupied(parkingId) {
     }
 }
 
-// פונקציה שמפסיקה את השמירה של החנייה
+/**
+ * Unbooks a previously reserved parking spot.
+ *
+ * @param {number|string} id - Parking spot ID
+ * @param {number|string} userId - User ID
+ * @returns {Promise<Object>} Unbooking result or error object
+ */
+
 export async function unBookParking(id, userId) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/unbook/`, JSON.stringify({
@@ -78,7 +110,13 @@ export async function unBookParking(id, userId) {
     }
 }
 
-// פונקציה שמחזירה מידע על החניונים של האדמין בהינתן מספר מזהה
+/**
+ * Fetches all parking lots owned by a specific admin.
+ *
+ * @param {number|string} ownerId - Admin user ID
+ * @returns {Promise<Object>} List of parking lots or error object
+ */
+
 export async function fetchOwnerParkingLots(ownerId) {
     try {
         
@@ -92,7 +130,13 @@ export async function fetchOwnerParkingLots(ownerId) {
     }
 }
 
-// פונקציה שמחזירה מידע מהשרת עבור האדמין על משתמשים החונים בחניון שלו
+/**
+ * Fetches users currently parked in a specific parking lot.
+ *
+ * @param {number|string} parkingLotId - Parking lot ID
+ * @returns {Promise<Object>} List of users or error object
+ */
+
 export async function fetchParkingLotUsers (parkingLotId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/parkinglot/parking_lot_users/${parkingLotId}/`);
@@ -104,7 +148,13 @@ export async function fetchParkingLotUsers (parkingLotId) {
     }
 }
 
-// פונקציה שמחזירה מהשרת את ההיסטוריה של חניון מסוים - עבור האדמין
+/**
+ * Fetches parking history of a specific parking lot (for admin).
+ *
+ * @param {number|string} parkingLotId - Parking lot ID
+ * @returns {Promise<Object>} Parking history data or error object
+ */
+
 export async function getParkingLotHistory (parkingLotId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/auth/admin/history/${parkingLotId}/`);
@@ -116,7 +166,13 @@ export async function getParkingLotHistory (parkingLotId) {
     }
 }
 
-// פונקציה שמחזירה את ההיסטוריה של משתמש מסוים - עבור יוזר רגיל מתוך ההגדרות
+/**
+ * Fetches parking history of a specific user (for regular user).
+ *
+ * @param {number|string} userId - User ID
+ * @returns {Promise<Object>} User's parking history or error object
+ */
+
 export async function getUserHistory (userId) {
     try {
         const response = await axios.get(`${SERVER_NGROK_URL}/auth/history/${userId}/`);
@@ -128,7 +184,17 @@ export async function getUserHistory (userId) {
     }
 }
 
-// פונקציה שמחזירה לאדמין את הנתונים על החניון שלו בקובץ pdf
+/**
+ * Retrieves statistical report data for a parking lot (for admin, for PDF).
+ *
+ * @param {number|string} id - Parking lot ID
+ * @param {Object} formData - Date and parking lot details
+ * @param {number} formData.month - Month for report
+ * @param {number} formData.year - Year for report
+ * @param {string} formData.parkinglot - Parking lot name or ID
+ * @returns {Promise<Object>} Report data or error object
+ */
+
 export async function getParkingStats(id, formData) {
     try {
         const response = await axios.post(`${SERVER_NGROK_URL}/parkinglot/stats/`, JSON.stringify({

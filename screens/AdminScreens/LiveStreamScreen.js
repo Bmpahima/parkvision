@@ -5,6 +5,13 @@ import {  LIVE_STREAM_URL } from "@env";
 import { COLORS } from "../../constants/styles"
 import { LinearGradient } from "expo-linear-gradient";
 
+/**
+ * LiveStreamScreen displays a live MJPEG video stream using WebSocket.
+ * Allows toggling fullscreen mode on tap.
+ *
+ * @returns {JSX.Element}
+ */
+
 const LiveStreamScreen = () => {
   const [imageUri, setImageUri] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -14,6 +21,9 @@ const LiveStreamScreen = () => {
   let socket = null;  
 
   useEffect(() => {
+    /**
+     * Establish WebSocket connection and receive base64 video frames.
+     */
     const connectWebSocket = () => {
       socket = new WebSocket(LIVE_STREAM_URL);
       
@@ -56,7 +66,10 @@ const LiveStreamScreen = () => {
     };
   }, []);
 
-
+   /**
+   * Toggle fullscreen mode for the video.
+   */
+  
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen)
   }

@@ -4,7 +4,15 @@ import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Eas
 
 import { COLORS } from '../constants/styles';
 
-// רכיב שמייצג את הטיימר שיש בתוכו את התמונה של המכונית
+/**
+ * Circular animated timer component with a rotating border
+ * and an image of a car in the center.
+ *
+ * @param {Object} props
+ * @param {boolean} props.isRunning - Determines whether the rotation animation is active
+ * @returns {JSX.Element}
+ */
+
 
 function CarTimerCircle ({ isRunning }) {
     const shadowSharedValue = useSharedValue(0);

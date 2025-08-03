@@ -3,6 +3,19 @@ import { Ionicons } from "@expo/vector-icons"
 
 import { COLORS } from '../constants/styles';
 
+/**
+ * SettingItem component used to render a single setting row.
+ * Supports either a toggle switch or a navigation action.
+ *
+ * @param {Object} props
+ * @param {string} props.icon - Name of the Ionicon to display on the left
+ * @param {string} props.title - The title of the setting
+ * @param {string|boolean} props.value - The current value (shown as text or switch state)
+ * @param {Function} props.onPress - Callback triggered on press or switch toggle
+ * @param {boolean} [props.isSwitch=false] - Whether to render the value as a toggle switch
+ * @returns {JSX.Element}
+ */
+
 function SettingItem({ icon, title, value, onPress, isSwitch = false }) {
   return (
     <TouchableOpacity style={styles.settingItem} onPress={onPress} >

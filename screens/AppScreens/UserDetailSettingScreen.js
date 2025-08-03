@@ -6,7 +6,18 @@ import { useContext } from "react";
 import getShortName, { COLORS, CAR_COLORS, fixReversedHebrew } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
 
-// המסך בו מוצגים פרטי המשתמש לאדמין כדי שיידע מי חונה בכל חנייה
+/**
+ * @component UserDetailSettingScreen
+ * 
+ * A screen that displays a user's full details (name, email, phone, license number, vehicle info).
+ * Intended for admin use to identify who is parking in which spot.
+ * 
+ * @param {Object} props
+ * @param {Object} props.navigation - React Navigation object used to navigate between screens.
+ * 
+ * @returns {JSX.Element} Rendered user detail screen.
+ */
+
 function UserDetailSettingScreen({ navigation }) {
     const { user } = useContext(UserContext); 
 

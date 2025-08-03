@@ -3,7 +3,18 @@ import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 import { COLORS } from "../constants/styles";
 
-// רכיב של מגרש החנייה שניתן לבחור בו חניות ולראות אילו פנויות ואילו תפוסות
+/**
+ * Component representing a single parking spot.
+ * Visual style changes based on its state: available, occupied, or saved.
+ *
+ * @param {Object} props
+ * @param {number|string} props.id - Identifier of the parking spot (displayed if not occupied)
+ * @param {boolean} props.occupied - Whether the spot is currently occupied
+ * @param {boolean} props.saved - Whether the spot is reserved (saved)
+ * @param {Function} props.onPress - Callback when the spot is pressed
+ * @returns {JSX.Element}
+ */
+
 function ParkingSpot({ id, occupied, saved, onPress }) {
     const onParkingSelection = () => {
         onPress();

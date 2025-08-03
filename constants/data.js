@@ -1,3 +1,22 @@
+/**
+ * Mock data representing multiple parking lots with their locations,
+ * total number of spots, available spots, and detailed spot statuses.
+ *
+ * Each parking lot object contains:
+ * - name: string - Name of the parking lot
+ * - latitude: number - Latitude coordinate of the lot
+ * - longitude: number - Longitude coordinate of the lot
+ * - parking_spots: number - Total number of parking spots in the lot
+ * - freeSpots: number - Number of currently available spots
+ * - parkings: Array<Object> - Array of parking spot objects
+ *
+ * Each parking spot object contains:
+ * - id: number - Unique identifier for the spot
+ * - occupied: boolean - Whether the spot is currently occupied
+ * - license_number: string|null - License plate number if the spot is occupied
+ */
+
+
 export const DUMMY_DATA = [
     {
         name: "Parking Lot 01",

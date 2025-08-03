@@ -7,6 +7,25 @@ import { COLORS } from "../../constants/styles";
 
 const { width, height } = Dimensions.get("window");
 
+/**
+ * @component WelcomeScreen
+ *
+ * This is the initial welcome screen of the application.
+ * It displays the app logo, a welcome message, and two actions: 
+ * - "Get Started" to navigate to the SignUp screen.
+ * - "Sign In" to navigate to the Login screen.
+ *
+ * The screen uses Reanimated for entry animations of the logo, title, and footer:
+ * - Logo fades in with `withTiming`.
+ * - Title fades in with delay.
+ * - Footer slides up with spring animation.
+ *
+ * @param {object} props
+ * @param {object} props.navigation - React Navigation object used to navigate between screens.
+ * 
+ * @returns {JSX.Element} The rendered welcome screen.
+ */
+
 function WelcomeScreen ({ navigation }) {
 
     const imageOpacityValue = useSharedValue(0);

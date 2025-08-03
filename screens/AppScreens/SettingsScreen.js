@@ -7,10 +7,31 @@ import getShortName, { COLORS, UI_COLORS } from "../../constants/styles";
 import { UserContext } from "../../store/UserContext";
 import { deleteAccount } from "../../http/auth";
 
+
+/**
+ * @component SettingsScreen
+ * @description
+ * A screen that allows the user to manage account settings such as profile, password,
+ * history, preferences (notifications, dark mode), and perform actions like logout or account deletion.
+ * 
+ * @param {object} props
+ * @param {object} props.navigation - Navigation object from React Navigation
+ */
+
 function SettingsScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const userCtx = useContext(UserContext);
+
+  /**
+   * @function onPressDeleteAccount
+   * @description
+   * Prompts the user for confirmation before attempting to delete the account.
+   * If confirmed, sends a delete request to the backend and navigates to logout on success.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
 
   const onPressDeleteAccount = async () => {
     const sure = await new Promise((resolve) => {

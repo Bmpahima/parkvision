@@ -5,10 +5,22 @@ import { Ionicons } from "@expo/vector-icons";
 import getShortName, { COLORS, CAR_COLORS, fixReversedHebrew } from "../../constants/styles";
 
 
-// המסך בו מוצגים פרטי המשתמש לאדמין כדי שיידע מי חונה בכל חנייה
-function ParkingUserManager({ route, navigation }) {
-    const { user } = route.params; 
+/**
+ * ParkingUserManager
+ * 
+ * This screen displays detailed user information for a parking spot,
+ * used by the admin to see who is currently occupying a given space.
+ * Includes personal details, contact info, license number and vehicle data.
+ * 
+ * @component
+ * @param {object} props
+ * @param {object} props.route - React Navigation route object, contains `params.user`.
+ * @param {object} props.navigation - Navigation object for screen transitions.
+ */
 
+function ParkingUserManager({ route, navigation }) {
+    
+    const { user } = route.params; 
     let shortName = getShortName(user.first_name, user.last_name);
 
     return (

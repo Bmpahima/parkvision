@@ -1,3 +1,9 @@
+/**
+ * Validates the structure of an email address.
+ * @param {string} email - The email to validate.
+ * @returns {{ valid: boolean, error?: string, success?: string }}
+ */
+
 export function emailValidator(email) {
     if (!email || !email.includes('@')) {
         return { valid: false, error: "Email needs to include @." };
@@ -9,6 +15,12 @@ export function emailValidator(email) {
     return { valid: true, success: "Email is valid" };
 }
 
+/**
+ * Validates the strength of a password.
+ * @param {string} password - The password to validate.
+ * @returns {{ valid: boolean, error?: string, success?: string }}
+ */
+
 export function passwordValidator(password) {
     if (!password || password.length < 8) {
         return { valid: false, error: "Password must be at least 8 characters long." };
@@ -16,12 +28,24 @@ export function passwordValidator(password) {
     return { valid: true, success: "Password is valid." };
 }
 
+/**
+ * Validates the given name (first or last).
+ * @param {string} name - The name to validate.
+ * @returns {{ valid: boolean, error?: string, success?: string }}
+ */
+
 export function nameValidator(name) {
     if (!name || name.length === 0) {
         return { valid: false, error: "Name is invalid." };
     }
     return { valid: true, success: "Name is valid." };
 }
+
+/**
+ * Validates a 10-digit Israeli phone number.
+ * @param {string} phoneNumber - The phone number to validate.
+ * @returns {{ valid: boolean, error?: string, success?: string }}
+ */
 
 export function phoneValidator(phoneNumber) {
     if (!phoneNumber || phoneNumber.length !== 10) {
@@ -33,12 +57,36 @@ export function phoneValidator(phoneNumber) {
     return { valid: true, success: "Phone number is valid." };
 }
 
+/**
+ * Validates an Israeli car license plate (7-8 digits).
+ * @param {string} lisenceNumber - The license plate number to validate.
+ * @returns {{ valid: boolean, error?: string, success?: string }}
+ */
+
 export function lisenceValidator(lisenceNumber) {
     if (!lisenceNumber || (lisenceNumber.length !== 8 && lisenceNumber.length !== 7)) {
         return { valid: false, error: "Lisence number must be 7-8 digits long." };
     }
     return { valid: true, success: "Lisence number is valid." };
 }
+
+/**
+ * Validates all fields required for signing up a user.
+ * @param {{
+ *   fname: string,
+ *   lname: string,
+ *   email: string,
+ *   password: string,
+ *   phoneNumber: string,
+ *   lisenceNumber: string
+ * }} formData - The form data to validate.
+ * @returns {{
+ *   valid: boolean,
+ *   success?: string,
+ *   errors?: Array<Object>,
+ *   error?: string
+ * }}
+ */
 
 export function signUpValidation(formData) {
     try {
@@ -86,6 +134,17 @@ export function signUpValidation(formData) {
         return { valid: false, error: "An error occurred during validation." };
     }
 }
+
+/**
+ * Validates login form fields.
+ * @param {{ email: string, password: string }} formData - The login form data.
+ * @returns {{
+ *   valid: boolean,
+ *   success?: string,
+ *   errors?: Array<Object>,
+ *   error?: string
+ * }}
+ */
 
 export function loginValidation(formData) {
     try {

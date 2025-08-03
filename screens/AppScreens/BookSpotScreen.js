@@ -5,17 +5,52 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { COLORS } from "../../constants/styles";
 import Button from "../../components/Button";
 
+/**
+ * BookSpotScreen
+ * 
+ * This screen allows users to book a parking spot from a parking lot.
+ * Users can select an arrival time and confirm their booking.
+ * Displays basic payment info and estimated arrival time.
+ * 
+ * @component
+ * @param {object} props
+ * @param {object} props.navigation - Navigation object for navigation actions.
+ * @param {object} props.route - Route object that includes params: parkingId, parkingLot.
+ */
+
+
 function BookSpotScreen({ navigation, route }) {
   const { parkingId, parkingLot } = route.params;
+
+  /**
+   * The selected arrival time option from the user.
+   * Possible values: "Immediate", "1/2 hour", "1 hour"
+   * 
+   * @type {string}
+   */
+
   const [isSelected, setIsSelected] = useState("Immediate");
 
   useEffect(() => {
     console.log(route.params);
   }, [route]);
 
+  /**
+   * Handle user selection of arrival time.
+   * Updates state based on selected option.
+   * 
+   * @param {string} selectedOption - Selected time option.
+   */
+
   const handleOptionSelection = (selectedOption) => {
     setIsSelected(selectedOption);
   };
+
+  /**
+   * Triggered when the user presses "Confirm Booking".
+   * Calculates estimated arrival time based on selected option.
+   * Displays a confirmation Alert, and on confirmation, navigates back to home.
+   */
 
   const onBookParking = () => {
     let extraMinutes = 0;

@@ -9,7 +9,13 @@ import { COLORS } from "../constants/styles";
 import {signUp} from '../http/auth';
 import { signUpValidation, nameValidator, emailValidator, passwordValidator, lisenceValidator, phoneValidator } from "../util/validators";
 
-// רכיב המייצג טופס הרשמה של משתמשים
+/**
+ * SignupForm component that renders a registration form for new users.
+ * Includes client-side validation and backend interaction.
+ *
+ * @returns {JSX.Element}
+ */
+
 function SignupForm() {
     const navigation = useNavigation();
     const [errorMessages, setErrorMessages] = useState({});
@@ -24,6 +30,13 @@ function SignupForm() {
         phoneNumber: "",
         lisenceNumber: ""
     });
+
+    /**
+     * Handles user input changes, and optionally performs live validation.
+     *
+     * @param {string} text - The input text
+     * @param {string} field - The name of the field to update
+     */
 
     const onChangeHandler = (text, field) => {
         setFormData((currentValue) => ({
@@ -68,6 +81,11 @@ function SignupForm() {
             });
         }
     };
+
+    /**
+     * Handles the sign-up button press:
+     * Validates input, sends request to backend, and logs in the user if successful.
+     */
 
     const onSignUp = async () => {
         setHasSubmitted(true);

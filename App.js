@@ -1,3 +1,7 @@
+/**
+ * @file App.js - Main entry point of the application. Handles navigation structure using Stack and Drawer Navigators.
+ */
+
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -31,10 +35,12 @@ import LiveStreamScreen from './screens/AdminScreens/LiveStreamScreen';
 import ParkingStatsScreen from './screens/AdminScreens/ParkingStatsScreen';
 
 
-
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+/**
+ * Navigation stack for unauthenticated users (login, signup, welcome, forgot-password).
+ */
 
 const UserLoginScreen = () => {
   return (
@@ -67,6 +73,10 @@ const UserLoginScreen = () => {
     </Stack.Navigator>
   );
 };
+
+/**
+ * Stack for browsing parking lots and booking a spot.
+ */
 
 const ParkingLotStack = () => {
   return (
@@ -105,6 +115,10 @@ const ParkingLotStack = () => {
     </Stack.Navigator>
   );
 }
+
+/**
+ * Stack for admin-related pages: parking management, users, stats, history, live stream.
+ */
 
 const AdminStack = () => {
   return ( 
@@ -153,6 +167,9 @@ const AdminStack = () => {
   );
 }
 
+/**
+ * Stack for user settings including profile and parking history.
+ */
 
 const SettingsStack = () => {
   return ( 
@@ -181,6 +198,10 @@ const SettingsStack = () => {
     </Stack.Navigator>
   );
 }
+
+/**
+ * Drawer navigator used when the user is authenticated (standard user or admin).
+ */
 
 const HomeAppScreen = () => {
   const userCtx = useContext(UserContext);
@@ -246,6 +267,10 @@ const HomeAppScreen = () => {
   );
 };
 
+/**
+ * Determines the root navigator based on authentication state.
+ * @returns {JSX.Element} Navigation container with stack/drawer navigator
+ */
 
 function RootNavigation() {
   const userCtx = useContext(UserContext);
@@ -257,6 +282,10 @@ function RootNavigation() {
   );
 }
 
+/**
+ * Entry point of the app. Wraps navigation with user context provider.
+ * @returns {JSX.Element} Full application
+ */
 
 export default function App() {
   return (

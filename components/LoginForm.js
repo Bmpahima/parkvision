@@ -9,7 +9,13 @@ import { COLORS } from "../constants/styles";
 import { loginValidation } from "../util/validators";
 import { login } from "../http/auth";
 
-// רכיב המייצג את טופס הכניסה של המשתמש 
+/**
+ * LoginForm component that renders the login form,
+ * handles validation, authentication, and navigation logic.
+ *
+ * @returns {JSX.Element}
+ */
+
 function LoginForm() {
     const navigation = useNavigation();
     const [errorMessages, setErrorMessages] = useState({});
@@ -20,6 +26,13 @@ function LoginForm() {
         email: "",
         password: "",
     });
+
+    /**
+     * Handles text changes in the form fields and optionally validates the updated field.
+     *
+     * @param {string} text - The input text
+     * @param {string} field - The field name ("email" or "password")
+     */
 
     const onChangeHandler = (text, field) => { // פונקציה שמתבצעת בשינוי הטקסט בטופס
         setFormData((currentValue) => ({
@@ -58,6 +71,12 @@ function LoginForm() {
             });
         }
     };
+
+    /**
+     * Handles the login button press:
+     * validates input, sends request to server,
+     * updates user context and navigates to the main app.
+     */
 
     const onLogin = async () => {
         setHasSubmitted(true);

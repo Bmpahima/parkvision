@@ -18,6 +18,15 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
+/**
+ * @component ParkingLotScreen
+ * @description
+ * Displays a map with markers for nearby parking lots. Users can:
+ * - View parking lots on the map
+ * - Search for a specific lot
+ * - See a carousel with distance info
+ * - Tap on markers/cards to view details
+ */
 
 function ParkingLotScreen({ navigation }) {
   const [userLocation, setUserLocation] = useState(null);
@@ -33,7 +42,12 @@ function ParkingLotScreen({ navigation }) {
   const searchInputRef = useRef(null);
   const scrollOffsetRef = useRef(0);
 
-  // זו הפונקציה שמבקשת מהמשתמש הרשאות לקבל את המיקום שלו.
+  /** 
+   * verifyPermissions
+   * Requests foreground location permissions from the user.
+   * @returns {Promise<boolean>} true if permission is granted, false otherwise
+   */
+
   const verifyPermissions = useCallback(async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -46,7 +60,10 @@ function ParkingLotScreen({ navigation }) {
     return true;
   }, []);
 
-  // בקשת מידע מעודכן כל פעם שהמסך מתעדכן.
+  /**
+   * useFocusEffect (fetch parking lots)
+   * Fetches all available parking lots from the server when screen is focused.
+   */
   useFocusEffect(
     useCallback(() => {
       async function fetchData() {
@@ -71,7 +88,10 @@ function ParkingLotScreen({ navigation }) {
     }, [])
   );
 
-  // השגת המקום של המשתמש במידה וקיבלנו הרשאה לכך בזמן אמת
+  /**
+   * useFocusEffect (get user location)
+   * Retrieves the user's current or last known location when the screen is focused.
+   */
   useFocusEffect(
     useCallback(() => {
       let isMounted = true;
@@ -122,7 +142,10 @@ function ParkingLotScreen({ navigation }) {
   );
 
 
-  // כל פעם שהמיקום של המשתמש משתנה או שהחניונים משתמנים, נחשב את המרחקים של המשתמש מכולם
+  /**
+   * useEffect (calculate distances)
+   * Calculates the distance from the user's location to each parking lot.
+   */
   useEffect(() => {
     if (userLocation && parkingLotLocations.length > 0) {
       const calculatedDistances = {};
@@ -131,7 +154,7 @@ function ParkingLotScreen({ navigation }) {
 
       parkingLotLocations.forEach((lot) => {
         const lotCoords = { latitude: parseFloat(lot.latitude), longitude: parseFloat(lot.longitude) };
-        const distance = getDistance(lotCoords, userCoords) / 1000; // מחשב את המרחק בין שתי נקודות ציון
+        const distance = getDistance(lotCoords, userCoords) / 1000; 
         
         calculatedDistances[lot.name] = distance;
       });
@@ -140,18 +163,27 @@ function ParkingLotScreen({ navigation }) {
     }
   }, [userLocation, parkingLotLocations]);
 
-  // אם לחצתי על המידע של המרקר
+  /**
+   * onPressMarkerHandler
+   * Navigates to the parking lot detail screen when a map marker's callout is pressed.
+   */
   const onPressMarkerHandler = useCallback((parkingLot) => {
     navigation.navigate("parkingLotDetail", parkingLot);
   }, [navigation]);
 
-  // כל פעם שהטקסט משתנה, נעדכן את השאילתא 
+  /**
+   * handleSearch
+   * Updates the search query and shows/hides suggestions based on input.
+   */
   const handleSearch = useCallback((text) => {
     setSearchQuery(text);
     setShowSuggestions(!!text);
   }, []);
 
-  // פונקציה לגלילה של הרשימה
+  /**
+   * safeScrollToIndex
+   * Scrolls the carousel FlatList to the correct index, safely handling out-of-bounds.
+   */
   const safeScrollToIndex = useCallback((index) => {
     if (!flatListRef.current) return;
     
@@ -164,7 +196,10 @@ function ParkingLotScreen({ navigation }) {
     }
   }, [filteredLocations]);
 
-  // בבחירה של אופציה מתוך רשימת האופציות, נלך לחניון הזה במפה
+  /**
+   * handleSelectSuggestion
+   * Selects a parking lot from the suggestion list and centers it on the map.
+   */
   const handleSelectSuggestion = useCallback((parkingLot) => {
     setSearchQuery(parkingLot.name);
     setShowSuggestions(false);
@@ -182,7 +217,7 @@ function ParkingLotScreen({ navigation }) {
       );
     }
     
-    const index = parkingLotLocations.findIndex( // מציאת האינדקס של אותו איבר
+    const index = parkingLotLocations.findIndex( 
       (item) => item.name === parkingLot.name
     );
     
@@ -192,15 +227,20 @@ function ParkingLotScreen({ navigation }) {
     
     setSelectedMarker(parkingLot);
   }, [parkingLotLocations, safeScrollToIndex]);
-
-
-  // בלחיצה סתם על המפה נעיף את רשימת ההצעות ואת המקלדת
+  
+  /**
+   * handleMapPress
+   * Dismisses suggestions and keyboard when user taps on the map.
+   */
   const handleMapPress = useCallback(() => {
     setShowSuggestions(false);
     Keyboard.dismiss();
   }, []);
 
-  // בלחיצה על כפתור החיפוש
+  /**
+   * onSearchPress
+   * Searches for a parking lot by name and centers the map and carousel on it.
+   */
   const onSearchPress = useCallback(() => {
     const selectedParkingSpot = parkingLotLocations.find(
       (park) => park.name.toLowerCase() === searchQuery.toLowerCase()
@@ -240,19 +280,28 @@ function ParkingLotScreen({ navigation }) {
     Keyboard.dismiss();
   }, [parkingLotLocations, searchQuery, safeScrollToIndex]);
 
-  // בלחיצה על מרקר
+  /**
+   * onMarkerPress
+   * Scrolls the card carousel to match the selected marker on the map.
+   */
   const onMarkerPress = useCallback((parkingLot, index) => {
     // Use the safe scroll function
     safeScrollToIndex(index);
     setSelectedMarker(parkingLot);
   }, [safeScrollToIndex]);
 
-  // בלחיצה על כרטיסיה נעבור אל עמוד החניות
+  /**
+   * onCardPress
+   * Navigates to the selected parking lot's detail screen when a card is pressed.
+   */
   const onCardPress = useCallback((parkingLot) => {
     navigation.navigate("parkingLotDetail", parkingLot);
   }, [navigation]);
 
-  // בלחיצה על כפתור החזרה
+  /**
+   * goToUserLocation
+   * Centers the map on the user's current location.
+   */
   const goToUserLocation = useCallback(() => {
     if (userLocation && mapRef.current) {
       mapRef.current.animateToRegion(
@@ -273,12 +322,14 @@ function ParkingLotScreen({ navigation }) {
     }
   }, [userLocation]);
 
-  // מעדכן את מיקום הגלילה 
+  /**
+   * handleScroll
+   * Keeps track of the FlatList horizontal scroll position.
+   */
   const handleScroll = useCallback((event) => {
     scrollOffsetRef.current = event.nativeEvent.contentOffset.x;
   }, []);
 
-  // החניונים המעודכנים בהתאם לשאילתא
   let filteredLocations = parkingLotLocations.filter((loc) =>
     loc.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -289,7 +340,6 @@ function ParkingLotScreen({ navigation }) {
     return d1 - d2;
   })
 
-  // אם אנחנו טוענים מידע 
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>

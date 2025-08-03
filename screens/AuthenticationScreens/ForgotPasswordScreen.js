@@ -7,6 +7,21 @@ import Button from "../../components/Button";
 import { forgotPassword, resetPassword } from "../../http/auth";
 import { emailValidator, passwordValidator } from "../../util/validators";
 
+
+/**
+ * @component ForgotPasswordScreen
+ *
+ * This screen allows users to reset their password through a 3-step process:
+ * 1. Submitting their email to receive a reset code
+ * 2. Entering the verification code
+ * 3. Setting a new password
+ *
+ * @param {object} props
+ * @param {object} props.navigation - React Navigation object for screen navigation
+ *
+ * @returns {JSX.Element} Rendered Forgot Password screen
+ */
+
 function ForgotPasswordScreen({ navigation }) {
   const [errorMessages, setErrorMessages] = useState({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -20,6 +35,11 @@ function ForgotPasswordScreen({ navigation }) {
     confirmPassword: ""
   });
 
+  /**
+   * Handles email input change and validation.
+   * @param {string} text - The entered email value
+   */
+
   const onEmailChangeHandler = (text) => {
     setEmailEntered(text);
     if (hasSubmitted) {
@@ -30,6 +50,11 @@ function ForgotPasswordScreen({ navigation }) {
     }
   };
 
+  /**
+   * Handles verification code input change and validation.
+   * @param {string} text - The entered code
+   */
+
   const onCodeChangeHandler = (text) => {
     setCodeEntered(text);
     if (hasSubmitted) {
@@ -39,6 +64,12 @@ function ForgotPasswordScreen({ navigation }) {
       }));
     }
   };
+
+  /**
+   * Handles password or confirmation input change and validation.
+   * @param {string} text - The entered password
+   * @param {string} field - Either 'newPassword' or 'confirmPassword'
+   */
 
   const onPasswordChangeHandler = (text, field) => {
     setNewPasswordEntered((prev) => ({ ...prev, [field]: text }));
@@ -60,6 +91,11 @@ function ForgotPasswordScreen({ navigation }) {
     }
   };
 
+  /**
+   * Submits the email and triggers a request to send a reset code.
+   * Validates the email before sending.
+   */
+
   const onEmailSubmit = async () => {
     setHasSubmitted(true);
     if (!emailValidator(emailEntered).valid) {
@@ -80,6 +116,11 @@ function ForgotPasswordScreen({ navigation }) {
     }
   };
 
+  /**
+   * Verifies the reset code entered by the user.
+   * Displays error if the code is invalid.
+   */
+
   const onCodeSubmit = () => {
     setHasSubmitted(true);
     if (codeEntered.length !== 6) {
@@ -93,6 +134,11 @@ function ForgotPasswordScreen({ navigation }) {
       setErrorMessages((prev) => ({ ...prev, code: "Invalid verification code" }));
     }
   };
+
+  /**
+   * Submits the new password after verification.
+   * Validates password format and confirmation.
+   */
 
   const onPasswordSubmit = async () => {
     setHasSubmitted(true);
