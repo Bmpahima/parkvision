@@ -109,16 +109,6 @@ Scan the QR code with your Expo Go app or run on emulator.
 
 ---
 
-## 📄 License
-MIT License – see [LICENSE](../LICENSE) file.
-
----
-
-## 🧠 Contributors
-Thanks to all developers and testers involved in the ParkVision mobile experience.
-
----
-
 ## 📊 Tech Stack
 
 ![React Native](https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
